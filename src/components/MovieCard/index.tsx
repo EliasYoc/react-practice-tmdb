@@ -15,12 +15,15 @@ import {
   CircularProgressbarWrapper,
 } from "./styles";
 import { useState } from "react";
-import { LuChevronDown } from "react-icons/lu"
-import { Link, useNavigate } from "react-router-dom";
+import { LuChevronDown } from "react-icons/lu";
+import { unstable_useViewTransitionState, useNavigate } from "react-router-dom";
+import { detectAvailableViewTransition } from "../../utils/helper";
 
 const MovieCard = ({ src, average, title, id, releaseDate, description }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const to = `/movie/${id}`;
   const [isOverviewOpen, setIsOverviewOpen] = useState(false);
+  const isTransitioning = unstable_useViewTransitionState(to);
   const getAverageColor = (average) => {
     if (average <= 2) return "#fb4b4b";
     if (average <= 4) return "#ff8746";
@@ -36,21 +39,33 @@ const MovieCard = ({ src, average, title, id, releaseDate, description }) => {
     day: "numeric",
     timeZone: "UTC",
   }).format(new Date(releaseDate));
-  return (
-    <Card onClick={() =>
-      navigate(`/movie/${id}`)} className={isOverviewOpen ? "open-overview" : ""}>
 
-      <CardImg draggable="false" loading="lazy" src={src} alt={title} />
+  return (
+    <Card
+      onClick={() => {
+        navigate(to, { unstable_viewTransition: true });
+      }}
+      className={isOverviewOpen ? "open-overview" : ""}
+    >
+      <CardImg
+        draggable="false"
+        loading="lazy"
+        src={src}
+        alt={title}
+        style={{ viewTransitionName: isTransitioning ? "poster" : "" }}
+      />
 
       <CardBody>
         <ContainerVisibleContent
           onClick={(e) => {
             e.stopPropagation();
-            setIsOverviewOpen(!isOverviewOpen)
+            setIsOverviewOpen(!isOverviewOpen);
           }}
           className={isOverviewOpen ? "open-overview" : ""}
         >
-          <CircularProgressbarWrapper className={isOverviewOpen ? "open-overview" : ""}>
+          <CircularProgressbarWrapper
+            className={isOverviewOpen ? "open-overview" : ""}
+          >
             <CircularProgressbarWithChildren
               strokeWidth={15}
               value={average}
@@ -67,14 +82,21 @@ const MovieCard = ({ src, average, title, id, releaseDate, description }) => {
           </CircularProgressbarWrapper>
           <CardDate dateTime={releaseDate}>{formattedDate}</CardDate>
           <ArrowWrapper className={isOverviewOpen ? "open-overview" : ""}>
-            <LuChevronDown style={{ color: getAverageColor(average), fontSize: "1.5rem" }} />
+            <LuChevronDown
+              style={{ color: getAverageColor(average), fontSize: "1.5rem" }}
+            />
           </ArrowWrapper>
         </ContainerVisibleContent>
-        <CardDescription onClick={(e) => {
-          e.stopPropagation();
-          setIsOverviewOpen(false)
-        }} className={isOverviewOpen ? "open-overview" : ""}>
-          <CardTitle className={isOverviewOpen ? "open-overview" : ""}>{title}</CardTitle>
+        <CardDescription
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsOverviewOpen(false);
+          }}
+          className={isOverviewOpen ? "open-overview" : ""}
+        >
+          <CardTitle className={isOverviewOpen ? "open-overview" : ""}>
+            {title}
+          </CardTitle>
           <p>{description}</p>
         </CardDescription>
       </CardBody>

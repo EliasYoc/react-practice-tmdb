@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Card = styled.figure`
   width: 200px;
   height: 300px;
-
+  
   border-radius: 0.6rem;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   position: relative;
@@ -71,6 +71,7 @@ export const CardImg = styled.img`
   height: 100%;
   object-fit: cover;
   user-select: none;
+  border-radius: 0.6rem;
   z-index: 0;
 `;
 

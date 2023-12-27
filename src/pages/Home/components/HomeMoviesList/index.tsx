@@ -5,9 +5,10 @@ import { ConfigContext } from "../../../../context/ConfigurationContext";
 
 const HomeMoviesList = ({ MovieList }) => {
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
-  const { images: { base_url = "", backdrop_sizes = "" } = {} } =
-    tmdbConfigurationDetails;
-  console.log(MovieList);
+  const { images } =
+    tmdbConfigurationDetails || {};
+
+
   return (
     <HomeMovies>
       {MovieList.map((movie) => (
@@ -16,7 +17,7 @@ const HomeMoviesList = ({ MovieList }) => {
           id={movie.id}
           description={movie.overview}
           releaseDate={movie.release_date}
-          src={`${base_url}${backdrop_sizes[0]}${movie.poster_path}`}
+          src={`${images.base_url}${images.backdrop_sizes[0]}${movie.poster_path}`}
           average={movie.vote_average}
           title={movie.title}
         />

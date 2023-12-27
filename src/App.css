@@ -1,1 +1,19 @@
+@keyframes selected-poster-fade-out {
+  100% {
+    opacity: 1;
+  }
+}
 
+@keyframes selected-poster-fade-in {
+  100% {
+    mix-blend-mode: normal;
+  }
+}
+/* ::view-transition-old(var(--viewTransitionName)) */
+/* TODO probar esto en styled components */
+::view-transition-old(poster) {
+  animation: selected-poster-fade-out 0.3s ease;
+}
+::view-transition-new(poster) {
+  animation: selected-poster-fade-in 0.3s ease;
+}

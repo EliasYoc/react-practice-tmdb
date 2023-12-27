@@ -4,7 +4,7 @@ import { getConfigurationDetails } from "../services/tmdb/tmdbConfiguration";
 export const ConfigContext = createContext({});
 
 export const ConfigurationProvider = ({ children }: { children: React.ReactNode }) => {
-  const [tmdbConfigurationDetails, setTmdbConfigurationDetails] = useState({})
+  const [tmdbConfigurationDetails, setTmdbConfigurationDetails] = useState(null)
 
   useEffect(() => {
     const getConfiguration = async () => {
@@ -28,5 +28,6 @@ export const ConfigurationProvider = ({ children }: { children: React.ReactNode 
 
   //to build an image url tmdb has base_url and 
   const data = { tmdbConfigurationDetails };
+  if (!tmdbConfigurationDetails) return null;
   return <ConfigContext.Provider value={data}>{children}</ConfigContext.Provider>;
 }
