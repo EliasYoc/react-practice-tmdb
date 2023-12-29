@@ -1,7 +1,3 @@
-import {
-  CircularProgressbarWithChildren,
-  buildStyles,
-} from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import {
   ArrowWrapper,
@@ -17,33 +13,35 @@ import {
 import { useState } from "react";
 import { LuChevronDown } from "react-icons/lu";
 import { unstable_useViewTransitionState, useNavigate } from "react-router-dom";
-import { detectAvailableViewTransition } from "../../utils/helper";
+import { formatDate, getAverageColor } from "../../utils/helper";
+import TmdbCircularPtogressBar from "../TmbdCircularProgressBar";
 
-const MovieCard = ({ src, average, title, id, releaseDate, description }) => {
+const MovieCard = ({ src, backdropSrc, average, title, id, releaseDate, description }) => {
   const navigate = useNavigate();
   const to = `/movie/${id}`;
   const [isOverviewOpen, setIsOverviewOpen] = useState(false);
   const isTransitioning = unstable_useViewTransitionState(to);
-  const getAverageColor = (average) => {
-    if (average <= 2) return "#fb4b4b";
-    if (average <= 4) return "#ff8746";
-    if (average <= 6) return "#f2e176";
-    if (average <= 8) return "#90f366";
-    if (average <= 10) return "#0ece2e";
-    return "#3e98c7";
-  };
 
-  const formattedDate = Intl.DateTimeFormat(navigator.language, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(releaseDate));
+  const formattedDate = formatDate(
+    navigator.language,
+    { year: "numeric", month: "short", day: "numeric" },
+    new Date(releaseDate)
+  );
 
   return (
     <Card
       onClick={() => {
-        navigate(to, { unstable_viewTransition: true });
+        navigate(to, {
+          unstable_viewTransition: true,
+          state: {
+            title,
+            releaseDate: formattedDate,
+            serieMovieAverage: average,
+            posterSrc: src,
+            backdropSrc: backdropSrc,
+          },
+          preventScrollReset: true,
+        });
       }}
       className={isOverviewOpen ? "open-overview" : ""}
     >
@@ -52,7 +50,10 @@ const MovieCard = ({ src, average, title, id, releaseDate, description }) => {
         loading="lazy"
         src={src}
         alt={title}
-        style={{ viewTransitionName: isTransitioning ? "poster" : "" }}
+        style={{
+          viewTransitionName: isTransitioning ? "poster" : "",
+          contain: "layout",
+        }}
       />
 
       <CardBody>
@@ -65,22 +66,28 @@ const MovieCard = ({ src, average, title, id, releaseDate, description }) => {
         >
           <CircularProgressbarWrapper
             className={isOverviewOpen ? "open-overview" : ""}
+            style={{
+              viewTransitionName: isTransitioning ? "show-avg-progress" : "",
+              contain: "layout",
+            }}
           >
-            <CircularProgressbarWithChildren
-              strokeWidth={15}
+            <TmdbCircularPtogressBar
               value={average}
-              minValue={0}
               maxValue={10}
               text={average.toString()}
-              styles={buildStyles({
-                pathColor: getAverageColor(average),
-                textColor: getAverageColor(average),
-                trailColor: "#d6d6d654",
-                textSize: "2rem",
-              })}
             />
           </CircularProgressbarWrapper>
-          <CardDate dateTime={releaseDate}>{formattedDate}</CardDate>
+          <CardDate
+            dateTime={releaseDate}
+            style={{
+              viewTransitionName: isTransitioning
+                ? "movie-series-release-date"
+                : "",
+              contain: "layout",
+            }}
+          >
+            {formattedDate}
+          </CardDate>
           <ArrowWrapper className={isOverviewOpen ? "open-overview" : ""}>
             <LuChevronDown
               style={{ color: getAverageColor(average), fontSize: "1.5rem" }}

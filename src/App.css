@@ -11,6 +11,15 @@
 }
 /* ::view-transition-old(var(--viewTransitionName)) */
 /* TODO probar esto en styled components */
+/* ::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 2s;
+} */
+
+::view-transition-group(poster) {
+  animation-duration: 0.5s;
+}
+
 ::view-transition-old(poster) {
   animation: selected-poster-fade-out 0.3s ease;
 }

@@ -17,7 +17,8 @@ const HomeMoviesList = ({ MovieList }) => {
           id={movie.id}
           description={movie.overview}
           releaseDate={movie.release_date}
-          src={`${images.base_url}${images.backdrop_sizes[0]}${movie.poster_path}`}
+          src={`${images.base_url}${images.poster_sizes[2]}${movie.poster_path}`}
+          backdropSrc={`${images.base_url}${images.backdrop_sizes[0]}${movie.backdrop_path}`}
           average={movie.vote_average}
           title={movie.title}
         />
