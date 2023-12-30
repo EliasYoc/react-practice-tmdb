@@ -3,15 +3,18 @@
   line-height: 1.5;
   font-weight: 400;
 
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkitfont-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
+
+  --mob-responsive-poster-top: 100px;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;

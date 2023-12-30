@@ -1,9 +1,14 @@
 import styled from "styled-components";
+import { mediaQueries } from "../../utils/helper";
 
 export const Cover = styled.div`
   display: flex;
   position: relative;
-  height: 60vh ;
+  height: 800px;
+
+  @media only screen and (${mediaQueries.md}) {
+    height: auto;
+  }
 `
 export const CoverImg = styled.img`
   position: absolute ;
@@ -24,39 +29,31 @@ export const CoverDetails = styled.section`
   width: min(1200px, 100%) ;
   display: flex ;
   gap: 1rem ;
-  padding: 3rem 1rem  ;
+  padding: 1rem  ;
   margin: 0 auto;
   position: relative ;
   align-items: center ;
-  `
-export const CoverInfo = styled.article`
- flex-grow: 1 ;
- align-self: stretch ;
- background: rgba(0, 0, 0, 0.5);
- color:#fff ;
- padding:   2rem;
- border-radius: 1rem ;
- display: flex ;
- flex-direction: column ;
- gap: 0.5rem ;
-`
 
-export const CoverButtonsContainer = styled.div`
-  display: flex ;
-  gap: 1rem ;
-`
-export const CircularProgressbarWrapper = styled.div`
-  width: 70px ;
+  @media only screen and (${mediaQueries.md}) {
+    & {
+      justify-content: center;
+    }
+  }
   `
+
 
 export const PosterWrapper = styled.div`
-
-  width: min(300px, 50%);
+  width: min(380px, 50%);
   display: flex ;
-  border-radius: 1rem;
-  overflow: hidden;
   aspect-ratio: 2/3;
   flex-shrink: 0 ;
+
+  @media only screen and (${mediaQueries.md}) {
+    & {
+      width: auto;
+      max-width: 340px;
+    }
+  }
 `
 
 export const Poster = styled.img`
@@ -64,10 +61,8 @@ export const Poster = styled.img`
   height: 100%;
   border-radius: 1rem;
   view-transition-name:var(--viewTransitionName) ;
-`
-export const MovieTitle = styled.h1`
-  font-size: 1.8rem ;
-  text-wrap: balance;
-`
 
-export const Overview = styled.p``
+  @media only screen and (${mediaQueries.md}) {
+    transform: translateY(var(--mob-responsive-poster-top)) ;
+  }
+`

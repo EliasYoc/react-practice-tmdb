@@ -16,7 +16,17 @@ import { unstable_useViewTransitionState, useNavigate } from "react-router-dom";
 import { formatDate, getAverageColor } from "../../utils/helper";
 import TmdbCircularPtogressBar from "../TmbdCircularProgressBar";
 
-const MovieCard = ({ src, backdropSrc, average, title, id, releaseDate, description }) => {
+interface MovieCardProps {
+  src: string;
+  backdropSrc: string;
+  average: number;
+  title: string;
+  id: number;
+  releaseDate: string;
+  description: string;
+}
+
+const MovieCard = ({ src, backdropSrc, average, title, id, releaseDate, description }: MovieCardProps) => {
   const navigate = useNavigate();
   const to = `/movie/${id}`;
   const [isOverviewOpen, setIsOverviewOpen] = useState(false);

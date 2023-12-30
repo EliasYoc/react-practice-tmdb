@@ -1,8 +1,26 @@
-import { Header } from "./styles"
+import { useLocation, useNavigate } from "react-router-dom"
+import { Header, HeaderLeft, HeaderTitle, IconWrapper } from "./styles"
+import { LuArrowLeft } from "react-icons/lu";
 
 const AppHeader = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   return (
-    <Header>Movies and Series</Header>
+    <Header>
+      <HeaderLeft>
+
+        {location.pathname !== "/" && <IconWrapper onClick={() => navigate(-1)}>
+          <LuArrowLeft />
+        </IconWrapper>
+        }
+        <HeaderTitle>
+          Movies and Series
+        </HeaderTitle>
+
+      </HeaderLeft>
+
+    </Header>
   )
 }
 

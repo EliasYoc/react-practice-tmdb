@@ -26,4 +26,12 @@ export const formatDate = (
     if (average <= 8) return "#90f366";
     if (average <= 10) return "#0ece2e";
     return "#3e98c7";
-  };
+};
+  
+export const mediaQueries = {
+  sm: "(max-width: 640px)",
+  md: "(max-width: 768px)",
+  lg: "(max-width: 1024px)",
+  xl: "(max-width: 1280px)",
+  xxl: "(max-width: 1536px)",
+}
