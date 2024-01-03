@@ -9,7 +9,8 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
-  --mob-responsive-poster-top: 100px;
+  --mob-responsive-poster-top: 10vh;
+  --header-height: 4rem;
 }
 
 *,
@@ -18,4 +19,17 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  height: 100vh;
+  overflow: auto;
+}
+
+body {
+  height: 100%;
+}
+
+#root {
+  height: calc(100% - var(--header-height));
 }

@@ -4,10 +4,10 @@ import { mediaQueries } from "../../utils/helper";
 export const Cover = styled.div`
   display: flex;
   position: relative;
-  height: 800px;
+  min-height: 800px;
 
   @media only screen and (${mediaQueries.md}) {
-    height: auto;
+    min-height: 50vh;
   }
 `
 export const CoverImg = styled.img`
@@ -37,6 +37,7 @@ export const CoverDetails = styled.section`
   @media only screen and (${mediaQueries.md}) {
     & {
       justify-content: center;
+      align-items: flex-start;
     }
   }
   `
@@ -50,8 +51,8 @@ export const PosterWrapper = styled.div`
 
   @media only screen and (${mediaQueries.md}) {
     & {
-      width: auto;
-      max-width: 340px;
+      width: 75% ;
+      
     }
   }
 `
@@ -60,7 +61,7 @@ export const Poster = styled.img`
   width: 100%;
   height: 100%;
   border-radius: 1rem;
-  view-transition-name:var(--viewTransitionName) ;
+  view-transition-name:var(--posterViewTransitionName) ;
 
   @media only screen and (${mediaQueries.md}) {
     transform: translateY(var(--mob-responsive-poster-top)) ;

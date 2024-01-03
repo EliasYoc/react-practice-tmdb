@@ -20,11 +20,11 @@ export const formatDate = (
 
 
   export const getAverageColor = (average:number) => {
-    if (average <= 2) return "#fb4b4b";
-    if (average <= 4) return "#ff8746";
-    if (average <= 6) return "#f2e176";
-    if (average <= 8) return "#90f366";
-    if (average <= 10) return "#0ece2e";
+    if (average >= 8) return "#0ece2e";
+    if (average >= 6) return "#90f366";
+    if (average >= 4) return "#f2e176";
+    if (average >= 2) return "#ff8746";
+    if (average >= 0) return "#fb4b4b";
     return "#3e98c7";
 };
   

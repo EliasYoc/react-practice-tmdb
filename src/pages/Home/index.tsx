@@ -1,14 +1,14 @@
 import { useLoaderData } from "react-router-dom"
-import HomeMoviesList from "./components/HomeMoviesList"
+import HomeMoviesTvList from "./components/HomeMoviesTvList"
 
 
 const Home = () => {
-  const { discoverMovie } = useLoaderData()
-
+  const { discoverMovie, discoverTv } = useLoaderData()
+  console.log(discoverMovie, discoverTv)
   return (
-    <main>
-      <HomeMoviesList MovieList={discoverMovie.results} />
-
+    <main style={{ height: "100%" }}>
+      <HomeMoviesTvList movieTvList={discoverMovie.results} />
+      <HomeMoviesTvList movieTvList={discoverTv.results} />
     </main>
   )
 }

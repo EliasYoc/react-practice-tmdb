@@ -1,10 +1,10 @@
-import { getDiscoverMovie } from "../../services/tmdb/tmdbMovies"
+import { getDiscover } from "../../services/tmdb/tmdbMovies"
 
 export const homeLoader = async () => {
 
-  const res = await getDiscoverMovie()
-  if (res.status !== 200) throw new Response(res.statusText, { status: res.status })
-  const discoverMovie = res.data
+  const [discoverMovieRes, discoverTvRes] = await Promise.all([getDiscover('/movie'), getDiscover('/tv')])
+  
+  if (discoverMovieRes.status !== 200) throw new Response(discoverMovieRes.statusText, { status: discoverMovieRes.status })
 
-  return { discoverMovie }
+  return { discoverMovie: discoverMovieRes.data, discoverTv: discoverTvRes.data }
 }

@@ -9,7 +9,7 @@
     mix-blend-mode: normal;
   }
 }
-/* ::view-transition-old(var(--viewTransitionName)) */
+/* ::view-transition-old(var(--posterViewTransitionName)) */
 /* TODO probar esto en styled components */
 /* ::view-transition-old(root),
 ::view-transition-new(root) {

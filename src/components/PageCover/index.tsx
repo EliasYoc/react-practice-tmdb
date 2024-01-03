@@ -14,7 +14,7 @@ import { mediaQueries } from "../../utils/helper";
 import MovieSerieCardInfo from "./components/MovieSerieCardInfo";
 
 type CustomStyle = CSSProperties & {
-  "--viewTransitionName"?: string;
+  "--posterViewTransitionName"?: string;
 };
 
 const PageCover = ({
@@ -28,7 +28,7 @@ const PageCover = ({
   const matchMdScreen = useMediaQuery(mediaQueries.md);
 
   const posterInlineStyle: CustomStyle = {
-    "--viewTransitionName": "poster",
+    "--posterViewTransitionName": "poster",
     contain: "layout",
   };
   // I use the state from /MovieCard component to load the average and date faster in order to have a better view transition, because I need the movie date and release date etc to be placed (from /MovieCard to /PageCover) in the element that is transitioning )

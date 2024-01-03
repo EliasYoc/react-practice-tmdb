@@ -16,7 +16,7 @@ interface ReusableMovieShowDetails {
 }
 
 const MovieDetails = () => {
-  const { id } = useParams();
+  const { id, showType } = useParams();
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const { state } = useLocation();
   const matchMdScreen = useMediaQuery(mediaQueries.md);
@@ -28,7 +28,7 @@ const MovieDetails = () => {
     // aprender a usar useEffect de la nueva version de react
     const getMovie = async () => {
       try {
-        const res = await getMovieDetailsById(id);
+        const res = await getMovieDetailsById(`/${showType}/${id}`);
         console.log(res.data);
         setMovieDetails(res.data);
       } catch (error) {
@@ -43,7 +43,7 @@ const MovieDetails = () => {
     formatedReleaseDateRef.current = formatDate(
       navigator.language,
       { year: "numeric", month: "short", day: "numeric" },
-      new Date(movieDetails?.release_date)
+      new Date(movieDetails?.release_date || movieDetails?.first_air_date)
     );
   }
 
