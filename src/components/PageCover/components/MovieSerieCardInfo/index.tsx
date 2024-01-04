@@ -1,5 +1,7 @@
 import { CircularProgressbarWrapper, CoverButtonsContainer, Info, MovieTitle, Overview } from './styles'
 import TmdbCircularPtogressBar from '../../../TmbdCircularProgressBar'
+import Button from '../../../Button'
+import { useNavigate } from 'react-router-dom'
 
 interface CardInfoProps {
   title?: string
@@ -8,6 +10,8 @@ interface CardInfoProps {
   overview?: string
 }
 const MovieSerieCardInfo = ({ title, releaseDate, average, overview }: CardInfoProps) => {
+  const navigate = useNavigate();
+
   return (
     <Info>
       <header>
@@ -39,6 +43,9 @@ const MovieSerieCardInfo = ({ title, releaseDate, average, overview }: CardInfoP
             text={(average * 10)?.toFixed(2)?.toString() + "%"}
           />
         </CircularProgressbarWrapper>
+        <Button tooltiptitle="Cast and Crew" onClick={() => {
+          navigate("cast")
+        }} />
       </CoverButtonsContainer>
       <Overview>{overview}</Overview>
     </Info>

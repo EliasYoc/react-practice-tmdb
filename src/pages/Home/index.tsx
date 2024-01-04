@@ -6,7 +6,7 @@ const Home = () => {
   const { discoverMovie, discoverTv } = useLoaderData()
   console.log(discoverMovie, discoverTv)
   return (
-    <main style={{ height: "100%" }}>
+    <main>
       <HomeMoviesTvList movieTvList={discoverMovie.results} />
       <HomeMoviesTvList movieTvList={discoverTv.results} />
     </main>

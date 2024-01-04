@@ -20,7 +20,7 @@ const HomeMoviesTvList = ({ movieTvList }) => {
           src={`${images.base_url}${images.poster_sizes[2]}${movieOrTv.poster_path}`}
           backdropSrc={`${images.base_url}${images.backdrop_sizes[0]}${movieOrTv.backdrop_path}`}
           average={movieOrTv.vote_average}
-          title={movieOrTv.title}
+          title={movieOrTv.title || movieOrTv.name}
           showType={movieOrTv.release_date ? "movie" : "tv"}
         />
       ))}

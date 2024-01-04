@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { getMovieDetailsById } from "../../services/tmdb/tmdbMovies";
+import { getShowById } from "../../services/tmdb/tmdbMovies";
 import PageCover from "../../components/PageCover";
 import { ConfigContext } from "../../context/ConfigurationContext";
 import { MainSection } from "./style";
@@ -28,7 +28,7 @@ const MovieDetails = () => {
     // aprender a usar useEffect de la nueva version de react
     const getMovie = async () => {
       try {
-        const res = await getMovieDetailsById(`/${showType}/${id}`);
+        const res = await getShowById({ id, showType });
         console.log(res.data);
         setMovieDetails(res.data);
       } catch (error) {
@@ -37,7 +37,7 @@ const MovieDetails = () => {
     };
     getMovie();
     return () => { };
-  }, [id]);
+  }, [id, showType]);
 
   if (movieDetails) {
     formatedReleaseDateRef.current = formatDate(
@@ -48,7 +48,7 @@ const MovieDetails = () => {
   }
 
   const reusableMovieShowDetails: ReusableMovieShowDetails = {
-    title: state?.title || movieDetails?.title,
+    title: state?.title || movieDetails?.title || movieDetails?.name,
     releaseDate: formatedReleaseDateRef.current || state?.releaseDate,
     average: movieDetails?.vote_average || state?.serieMovieAverage,
     overview: movieDetails?.overview,

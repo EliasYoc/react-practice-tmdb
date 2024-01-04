@@ -22,6 +22,7 @@ export const Info = styled.article`
 
 export const CoverButtonsContainer = styled.div`
   display: flex;
+  align-items: center;
   gap: 1rem;
 `;
 export const CircularProgressbarWrapper = styled.div`

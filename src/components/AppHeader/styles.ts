@@ -9,7 +9,7 @@ export const Header = styled.header`
   height: var(--header-height) ;
   background: #ffffff4d ;
   backdrop-filter: blur(15px);
-
+  z-index: 2 ;
   @media only screen and (${mediaQueries.md}) {
     top: auto;
     bottom: 0 ;

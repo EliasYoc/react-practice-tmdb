@@ -14,7 +14,7 @@ const AppHeader = () => {
           <LuArrowLeft />
         </IconWrapper>
         }
-        <HeaderTitle>
+        <HeaderTitle onClick={() => navigate("/", { unstable_viewTransition: true })}>
           Movies and Series
         </HeaderTitle>
 
