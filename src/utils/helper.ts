@@ -3,7 +3,7 @@ export const detectAvailableViewTransition = (cb: () => void) => {
     cb();
     return;
   }
-  document.startViewTransition(() => {
+  return document.startViewTransition(() => {
     cb();
   });
 };

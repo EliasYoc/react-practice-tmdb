@@ -24,12 +24,12 @@ interface MovieCardProps {
   id: number;
   releaseDate: string;
   description: string;
-  showType: "movie" | "tv";
+  mediaType: "movie" | "tv";
 }
 
-const MovieCard = ({ src, backdropSrc, average, title, id, releaseDate, description, showType }: MovieCardProps) => {
+const MovieCard = ({ src, backdropSrc, average, title, id, releaseDate, description, mediaType }: MovieCardProps) => {
   const navigate = useNavigate();
-  const to = `/${showType}/${id}`;
+  const to = `/${mediaType}/${id}`;
   const [isOverviewOpen, setIsOverviewOpen] = useState(false);
   const isTransitioning = unstable_useViewTransitionState(to);
 

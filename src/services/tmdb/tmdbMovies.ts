@@ -8,13 +8,14 @@ export const getDiscover = (
   return tmdbInstance.get(`/discover${pathRest}`, config);
 };
 
-interface IgetShowById {
+interface IGetShowById {
   id?: string;
-  showType?:string;
+  mediaType?: string;
+  pathRest?: string;
 }
 export const getShowById = (
-  { id, showType = "movie" }: IgetShowById,
+  { id, mediaType = "movie", pathRest }: IGetShowById,
   config: AxiosRequestConfig = {}
 ) => {
-  return tmdbInstance.get(`/${showType}/${id}`, config);
+  return tmdbInstance.get(`/${mediaType}/${id}${pathRest?pathRest:""}`, config);
 };

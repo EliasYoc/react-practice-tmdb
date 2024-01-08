@@ -21,7 +21,7 @@ const HomeMoviesTvList = ({ movieTvList }) => {
           backdropSrc={`${images.base_url}${images.backdrop_sizes[0]}${movieOrTv.backdrop_path}`}
           average={movieOrTv.vote_average}
           title={movieOrTv.title || movieOrTv.name}
-          showType={movieOrTv.release_date ? "movie" : "tv"}
+          mediaType={movieOrTv.release_date ? "movie" : "tv"}
         />
       ))}
     </HomeMovies>

@@ -44,7 +44,7 @@ const MovieSerieCardInfo = ({ title, releaseDate, average, overview }: CardInfoP
           />
         </CircularProgressbarWrapper>
         <Button tooltiptitle="Cast and Crew" onClick={() => {
-          navigate("cast")
+          navigate("cast/all", { unstable_viewTransition: true })
         }} />
       </CoverButtonsContainer>
       <Overview>{overview}</Overview>
