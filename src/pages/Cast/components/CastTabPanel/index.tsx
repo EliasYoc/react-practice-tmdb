@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import PersonCard from "../../../../components/PersonCard";
 import {
@@ -21,38 +21,40 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const { department: departmentParam } = useParams();
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
-  const teamDepartmentsOfThisCast = Object.groupBy(data, getTeamByDepartment);
+  const teamDepartmentsOfThisCast = useMemo(
+    () => Object.groupBy(data, getTeamByDepartment),
+    [data]
+  );
 
-  const dataNoDuplicated = useMemo(() => {
-    const noDuplicatedData = (acc: ITmdbPerson[], curr) => {
+  const noDuplicatedData = useCallback(
+    (acc: ITmdbPerson[], curr: ITmdbPerson) => {
       const isPersonDuplicated = acc.some((item) => item.id === curr.id);
       if (!isPersonDuplicated) acc.push(curr);
       return acc;
-    };
+    },
+    []
+  );
 
+  const dataNoDuplicated = useMemo(() => {
     if (departmentParam === "all") return data.reduce(noDuplicatedData, []);
-
+    if (!teamDepartmentsOfThisCast[departmentParam]) return [];
     return teamDepartmentsOfThisCast[departmentParam].reduce(
       noDuplicatedData,
       []
     );
-  }, [data, departmentParam, teamDepartmentsOfThisCast]);
+  }, [departmentParam, teamDepartmentsOfThisCast, data, noDuplicatedData]);
 
-  const castDepartments = useMemo(
-    () =>
-      [
-        ...new Set(
-          data.map((person: ITmdbPerson) => person.known_for_department)
-        ),
-        "all",
-      ].map((departmentName) => ({
-        name: departmentName,
-        key: departmentName.toLowerCase().split(" ").join("_"),
-      })),
-    [data]
-  );
-
-  console.log(castDepartments);
+  const castDepartments = useMemo(() => {
+    return [
+      ...new Set(
+        data.map((person: ITmdbPerson) => person.known_for_department)
+      ),
+      "all",
+    ].map((departmentName) => ({
+      name: departmentName,
+      key: departmentName.toLowerCase().split(" ").join("_"),
+    }));
+  }, [data]);
 
   return (
     <CastTabContainer>
