@@ -10,7 +10,7 @@ interface IPersonCardProps {
 }
 const PersonCard = ({ src, realName, characterName, department, id }: IPersonCardProps) => {
   return (
-    <Person style={{ viewTransitionName: `person-${id}` }} >
+    <Person style={{ viewTransitionName: id ? `person-${id}` : undefined }} >
       <PersonImgWrapper>
         {src ? <PersonImage src={src} alt={realName} /> : <FaPersonCircleQuestion />}
       </PersonImgWrapper>
