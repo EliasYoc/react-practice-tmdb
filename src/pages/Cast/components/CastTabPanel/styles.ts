@@ -17,8 +17,16 @@ export const DeparmentName = styled.span`
   border-radius: 0.7rem;
   background: #efefef;
 
+  &:hover {
+    cursor: pointer;
+  }
+  &:active {
+    background:#dcdcdc;
+  }
+
   &.active {
     background: #439cf3;
+    color: #fff ;
   }
 `;
 

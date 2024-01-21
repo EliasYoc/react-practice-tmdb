@@ -62,9 +62,22 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
         {castDepartments.map((department) => (
           <DeparmentName
             className={department.key === departmentParam ? "active" : ""}
-            style={{ viewTransitionName: `department-${department.key}` }}
             key={department.key}
             onClick={() => {
+              const departmentSelected = department.key;
+              const $oldDepartment = document.querySelectorAll(".person-card");
+              const newSelectedDepartment =
+                departmentSelected === "all"
+                  ? data.reduce(noDuplicatedData, [])
+                  : teamDepartmentsOfThisCast[departmentSelected];
+
+              $oldDepartment.forEach((person) => {
+                const newAndOldMatches = newSelectedDepartment?.some(
+                  (item) => item.id === parseInt(person.dataset.id)
+                );
+
+                if (newAndOldMatches) person.style.viewTransitionName = `person-${person.dataset.id}`;
+              });
               navigate(`../${department.key}`, {
                 relative: "path",
                 replace: true,
@@ -79,6 +92,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
       <CastGrid>
         {dataNoDuplicated.map((castPerson) => (
           <PersonCard
+            className="person-card"
             key={castPerson.id}
             id={castPerson.id}
             src={

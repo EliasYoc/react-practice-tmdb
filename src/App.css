@@ -1,6 +1,6 @@
 @keyframes selected-poster-fade-out {
   100% {
-    opacity: 1;
+    opacity: 0;
   }
 }
 
@@ -15,14 +15,17 @@
 ::view-transition-new(root) {
   animation-duration: 2s;
 } */
-
-::view-transition-group(poster) {
-  animation-duration: 0.5s;
+::view-transition-group(*) {
+  animation-duration: 0.44s;
+  animation-timing-function: ease-in-out;
 }
+/* ::view-transition-group(poster) {
+  animation-duration: 0.3s;
+} */
 
 ::view-transition-old(poster) {
-  animation: selected-poster-fade-out 0.3s ease;
+  animation: selected-poster-fade-out 0.44s ease-in-out;
 }
 ::view-transition-new(poster) {
-  animation: selected-poster-fade-in 0.3s ease;
+  animation: selected-poster-fade-in 0.44s ease-in-out;
 }
