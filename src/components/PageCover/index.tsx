@@ -1,5 +1,3 @@
-import { useLocation } from "react-router-dom";
-
 import {
   Cover,
   CoverDetails,
@@ -17,14 +15,23 @@ type CustomStyle = CSSProperties & {
   "--posterViewTransitionName"?: string;
 };
 
+interface PageCoverProps {
+  srcPoster: string;
+  srcBackdrop: string;
+  title?: string;
+  average?: number;
+  releaseDate?: string;
+  overview?: string;
+}
+
 const PageCover = ({
   srcPoster,
   srcBackdrop,
   title,
-  average,
+  average = 0,
   releaseDate,
   overview,
-}) => {
+}: PageCoverProps) => {
   const matchMdScreen = useMediaQuery(mediaQueries.md);
 
   const posterInlineStyle: CustomStyle = {

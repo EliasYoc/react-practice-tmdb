@@ -30,11 +30,11 @@ interface ITab {
 
 interface ITabsProps {
   tabList: (ITab | null)[];
-  idKey?: string;
+  // idKey?: string;
   onChange?: () => void;
 }
 
-const TabsCustom = ({ tabList, idKey, onChange }: ITabsProps) => {
+const TabsCustom = ({ tabList, onChange }: ITabsProps) => {
   const [value, setValue] = useState(0);
 
 

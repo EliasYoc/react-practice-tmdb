@@ -9,7 +9,7 @@ interface IPathTvMovie {
 
 
 export const CastLoader: LoaderFunction = async ({ params }: LoaderFunctionArgs) => {
-  const { id, mediaType } = params;
+  const { id, mediaType = "movie" } = params;
   const pathForTvOrMovie: IPathTvMovie = {
     movie: "/credits",
     tv: "/aggregate_credits",

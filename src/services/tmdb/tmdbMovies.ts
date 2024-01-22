@@ -1,11 +1,12 @@
 import { tmdbInstance } from "../../api/clienteTmdb";
-import { AxiosRequestConfig } from "axios";
+import { AxiosRequestConfig, AxiosResponse } from "axios";
+import { IDiscoverMoviesSeries } from "../../types";
 
 export const getDiscover = (
   pathRest: string = "",
   config: AxiosRequestConfig = {}
-) => {
-  return tmdbInstance.get(`/discover${pathRest}`, config);
+): Promise<AxiosResponse<IDiscoverMoviesSeries>> => {
+  return tmdbInstance.get<IDiscoverMoviesSeries>(`/discover${pathRest}`, config);
 };
 
 interface IGetShowById {
