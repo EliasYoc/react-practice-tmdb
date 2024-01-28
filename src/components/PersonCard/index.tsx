@@ -2,9 +2,9 @@ import { FaPersonCircleQuestion } from 'react-icons/fa6'
 import { Person, PersonImage, PersonImgWrapper, PersonInfo, PersonName, PersonCharacterName } from './styles'
 
 interface IPersonCardProps {
-  src: string
+  src: string | null
   realName: string
-  characterName: string
+  characterName?: string
   department: string
   id: number
   className?: string

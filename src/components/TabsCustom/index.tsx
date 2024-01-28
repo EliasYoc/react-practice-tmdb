@@ -31,7 +31,7 @@ interface ITab {
 interface ITabsProps {
   tabList: (ITab | null)[];
   // idKey?: string;
-  onChange?: () => void;
+  onChange?: (event: SyntheticEvent<Element, Event>) => void;
 }
 
 const TabsCustom = ({ tabList, onChange }: ITabsProps) => {
@@ -43,7 +43,7 @@ const TabsCustom = ({ tabList, onChange }: ITabsProps) => {
     newValue: number
   ) => {
     setValue(newValue);
-    onChange?.();
+    onChange?.(event);
   };
   return (
     <>
