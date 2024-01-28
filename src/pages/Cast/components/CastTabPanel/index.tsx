@@ -25,7 +25,6 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
 
   const groupByDepartment = R.groupBy(getTeamByDepartment);
   const teamDepartmentsOfThisCast = useMemo(() => {
-    console.log("memo")
     return groupByDepartment(data)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
