@@ -1,4 +1,5 @@
 import { useCallback, useContext, useMemo } from "react";
+import * as R from "ramda"
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import PersonCard from "../../../../components/PersonCard";
 import {
@@ -18,13 +19,16 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
   const { department: departmentParam } = useParams();
-
+  console.log(data)
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
-  const teamDepartmentsOfThisCast = useMemo(
-    () => Object.groupBy(data, getTeamByDepartment),
-    [data]
-  );
+
+  const groupByDepartment = R.groupBy(getTeamByDepartment);
+  const teamDepartmentsOfThisCast = useMemo(() => {
+    console.log("memo")
+    return groupByDepartment(data)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const noDuplicatedData = useCallback(
     (acc: ITmdbPerson[], curr: ITmdbPerson) => {
