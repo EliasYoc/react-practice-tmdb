@@ -18,8 +18,8 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
-  const { department: departmentParam } = useParams();
-  console.log(data)
+  const { department: departmentParam = "all" } = useParams();
+
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
 
@@ -29,7 +29,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const noDuplicatedData = useCallback(
+  const dontDuplicateData = useCallback(
     (acc: ITmdbPerson[], curr: ITmdbPerson) => {
       const isPersonDuplicated = acc.some((item) => item.id === curr.id);
       if (!isPersonDuplicated) acc.push(curr);
@@ -39,13 +39,13 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   );
 
   const dataNoDuplicated: ITmdbPerson[] = useMemo(() => {
-    if (departmentParam === "all") return data.reduce(noDuplicatedData, []);
+    if (departmentParam === "all") return data.reduce(dontDuplicateData, []);
     if (!teamDepartmentsOfThisCast[departmentParam]) return [];
     return teamDepartmentsOfThisCast[departmentParam].reduce(
-      noDuplicatedData,
+      dontDuplicateData,
       []
     );
-  }, [departmentParam, teamDepartmentsOfThisCast, data, noDuplicatedData]);
+  }, [departmentParam, teamDepartmentsOfThisCast, data, dontDuplicateData]);
 
   const castDepartments = useMemo(() => {
     return [
@@ -69,11 +69,11 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
             onClick={() => {
               const departmentSelected = department.key;
               const $oldDepartment = document.querySelectorAll<HTMLDivElement>(".person-card");
-              const newSelectedDepartment: ITmdbPerson[] =
+              const newSelectedDepartment =
                 departmentSelected === "all"
-                  ? data.reduce(noDuplicatedData, [])
+                  ? data.reduce(dontDuplicateData, [])
                   : teamDepartmentsOfThisCast[departmentSelected];
-
+              console.log(newSelectedDepartment)
               $oldDepartment.forEach((person) => {
                 const personId = person.dataset.id;
                 if (personId) {
