@@ -31,12 +31,8 @@ const PersonCard = ({
           <PersonImage
             className="blurry"
             loading="lazy"
-            src={src}
+            data-src={src}
             alt={realName}
-            onLoad={(e) => {
-              if (e.target instanceof HTMLImageElement)
-                e.target.classList.remove("blurry");
-            }}
           />
         ) : (
           <FaPersonCircleQuestion style={{ fontSize: "2rem" }} />

@@ -25,15 +25,23 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     onIntersect: (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const $personInfo = document.getElementById(`person-info-${(entry.target as HTMLDivElement).dataset.id}`);
+          const $target = entry.target as HTMLDivElement;
+          const $personInfo = document.getElementById(`person-info-${$target.dataset.id}`);
+          const $personImg = $target.children[0].children[0];
 
+          if ($personImg instanceof HTMLImageElement) {
+            if ($personImg.dataset.src) $personImg.setAttribute("src", $personImg.dataset.src)
+            $personImg.onload = () => $personImg.classList.remove("blurry")
+          }
           $personInfo?.classList.add("show-overview")
-          observer.unobserve(entry.target);
+          observer.unobserve($target);
         }
       })
     },
     provideOptions: () => ({
-      rootMargin: "250px 0px",
+      root: document.querySelector("#scroll-app-view"),
+      rootMargin: "270px 0px",
+      threshold: 0
     })
   })
 
