@@ -10,6 +10,7 @@ import {
 } from "./styles";
 import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
+import useIntersectionObserver from "../../../../hooks/useIntersectionObserver";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
@@ -19,6 +20,22 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
   const { department: departmentParam = "all" } = useParams();
+  useIntersectionObserver({
+    provideElementsToObserve: () => document.querySelectorAll(".person-card"),
+    onIntersect: (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const $personInfo = document.getElementById(`person-info-${(entry.target as HTMLDivElement).dataset.id}`);
+
+          $personInfo?.classList.add("show-overview")
+          observer.unobserve(entry.target);
+        }
+      })
+    },
+    provideOptions: () => ({
+      rootMargin: "250px 0px",
+    })
+  })
 
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
@@ -73,7 +90,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
                 departmentSelected === "all"
                   ? data.reduce(dontDuplicateData, [])
                   : teamDepartmentsOfThisCast[departmentSelected];
-              console.log(newSelectedDepartment)
+
               $oldDepartment.forEach((person) => {
                 const personId = person.dataset.id;
                 if (personId) {
