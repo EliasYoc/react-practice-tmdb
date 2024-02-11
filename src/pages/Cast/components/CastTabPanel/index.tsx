@@ -54,14 +54,11 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const dontDuplicateData = useCallback(
-    (acc: ITmdbPerson[], curr: ITmdbPerson) => {
-      const isPersonDuplicated = acc.some((item) => item.id === curr.id);
-      if (!isPersonDuplicated) acc.push(curr);
-      return acc;
-    },
-    []
-  );
+  const dontDuplicateData = (acc: ITmdbPerson[], curr: ITmdbPerson) => {
+    const isPersonDuplicated = acc.some((item) => item.id === curr.id);
+    if (!isPersonDuplicated) acc.push(curr);
+    return acc;
+  };
 
   const dataNoDuplicated: ITmdbPerson[] = useMemo(() => {
     if (departmentParam === "all") return data.reduce(dontDuplicateData, []);
@@ -70,7 +67,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
       dontDuplicateData,
       []
     );
-  }, [departmentParam, teamDepartmentsOfThisCast, data, dontDuplicateData]);
+  }, [departmentParam, teamDepartmentsOfThisCast, data]);
 
   const castDepartments = useMemo(() => {
     return [
