@@ -12,6 +12,10 @@ export const Person = styled.figure`
 
 export const PersonInfo = styled.figcaption`
 overflow:hidden ;
+display: none;
+&.show-overview {
+  display: block;
+}
 `
 
 export const PersonImgWrapper = styled.div`
@@ -20,13 +24,16 @@ export const PersonImgWrapper = styled.div`
   flex-shrink: 0;
   align-self: center;
   justify-content: center;
-  font-size: 2rem ;
   color: #525252;
 `;
 export const PersonImage = styled.img`
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
+
+  &.blurry {
+    filter: blur(20px);
+  }
 `;
 
 export const PersonName = styled.h3`

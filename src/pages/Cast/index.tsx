@@ -2,6 +2,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import TabsCustom from "../../components/TabsCustom";
 import CastTabPanel from "./components/CastTabPanel";
 import { ITmdbPerson } from "../../types";
+import { useMemo } from "react";
 
 interface ITeam {
   cast: ITmdbPerson[];
@@ -14,13 +15,18 @@ const Cast = () => {
   const tabsHandleChange = () => {
     navigate("../all", { relative: "path", replace: true })
   }
+  const memoTeam = useMemo(() => {
+    return team
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  console.log("tabs")
   return (
     <div>
       <TabsCustom
         onChange={tabsHandleChange}
         tabList={[
-          { label: "Cast", tabPanel: <CastTabPanel data={team.cast} /> },
-          { label: "Crew", tabPanel: <CastTabPanel data={team.crew} /> },
+          { label: "Cast", tabPanel: <CastTabPanel data={memoTeam.cast} /> },
+          { label: "Crew", tabPanel: <CastTabPanel data={memoTeam.crew} /> },
         ]}
       />
     </div>
