@@ -10,7 +10,7 @@ function App(): JSX.Element {
   return (
     <>
       {!matchMdScreen && <AppHeader />}
-      <ViewFullHeight>
+      <ViewFullHeight id="scroll-app-view">
         <Outlet />
       </ViewFullHeight>
       {matchMdScreen && <AppHeader />}

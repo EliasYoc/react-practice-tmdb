@@ -1,4 +1,4 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import * as R from "ramda"
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import PersonCard from "../../../../components/PersonCard";
@@ -10,6 +10,7 @@ import {
 } from "./styles";
 import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
+import useIntersectionObserver from "../../../../hooks/useIntersectionObserver";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
@@ -19,6 +20,30 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
   const { department: departmentParam = "all" } = useParams();
+  useIntersectionObserver({
+    provideElementsToObserve: () => document.querySelectorAll(".person-card"),
+    onIntersect: (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const $target = entry.target as HTMLDivElement;
+          const $personInfo = document.getElementById(`person-info-${$target.dataset.id}`);
+          const $personImg = $target.children[0].children[0];
+
+          if ($personImg instanceof HTMLImageElement) {
+            if ($personImg.dataset.src) $personImg.setAttribute("src", $personImg.dataset.src)
+            $personImg.onload = () => $personImg.classList.remove("blurry")
+          }
+          $personInfo?.classList.add("show-overview")
+          observer.unobserve($target);
+        }
+      })
+    },
+    provideOptions: () => ({
+      root: document.querySelector("#scroll-app-view"),
+      rootMargin: "270px 0px",
+      threshold: 0
+    })
+  })
 
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
@@ -29,14 +54,11 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const dontDuplicateData = useCallback(
-    (acc: ITmdbPerson[], curr: ITmdbPerson) => {
-      const isPersonDuplicated = acc.some((item) => item.id === curr.id);
-      if (!isPersonDuplicated) acc.push(curr);
-      return acc;
-    },
-    []
-  );
+  const dontDuplicateData = (acc: ITmdbPerson[], curr: ITmdbPerson) => {
+    const isPersonDuplicated = acc.some((item) => item.id === curr.id);
+    if (!isPersonDuplicated) acc.push(curr);
+    return acc;
+  };
 
   const dataNoDuplicated: ITmdbPerson[] = useMemo(() => {
     if (departmentParam === "all") return data.reduce(dontDuplicateData, []);
@@ -45,7 +67,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
       dontDuplicateData,
       []
     );
-  }, [departmentParam, teamDepartmentsOfThisCast, data, dontDuplicateData]);
+  }, [departmentParam, teamDepartmentsOfThisCast, data]);
 
   const castDepartments = useMemo(() => {
     return [
@@ -73,7 +95,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
                 departmentSelected === "all"
                   ? data.reduce(dontDuplicateData, [])
                   : teamDepartmentsOfThisCast[departmentSelected];
-              console.log(newSelectedDepartment)
+
               $oldDepartment.forEach((person) => {
                 const personId = person.dataset.id;
                 if (personId) {
