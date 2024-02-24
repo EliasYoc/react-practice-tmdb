@@ -34,4 +34,5 @@ export const CastGrid = styled.div`
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
+  margin-top: 1rem;
 `;

@@ -11,6 +11,7 @@ import {
 import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useIntersectionObserver from "../../../../hooks/useIntersectionObserver";
+import { chunkArray } from "../../../../utils/helper";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
@@ -81,6 +82,8 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     }));
   }, [data]);
 
+  const dataChunks = chunkArray(dataNoDuplicated, 50);
+  console.log(dataChunks)
   return (
     <CastTabContainer>
       <Departments>
@@ -118,7 +121,25 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           </DeparmentName>
         ))}
       </Departments>
-      <CastGrid>
+      {dataChunks.map((dataChunk, index) => (
+        <CastGrid key={index} style={{ border: "2px solid red" }}>
+          {dataChunk.map((castPerson) => (
+            <PersonCard
+              className="person-card"
+              key={castPerson.id}
+              id={castPerson.id}
+              src={
+                castPerson.profile_path &&
+                `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
+              }
+              realName={castPerson.name}
+              characterName={castPerson.character}
+              department={castPerson.known_for_department}
+            />
+          ))}
+        </CastGrid>
+      ))}
+      {/* <CastGrid>
         {dataNoDuplicated.map((castPerson) => (
           <PersonCard
             className="person-card"
@@ -133,7 +154,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
             department={castPerson.known_for_department}
           />
         ))}
-      </CastGrid>
+      </CastGrid> */}
     </CastTabContainer>
   );
 };
