@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const CastTabContainer = styled.div`
   padding: 1rem;
+  display: flex ;
+  flex-direction: column;
 `;
 
 export const Departments = styled.div`
@@ -34,5 +36,4 @@ export const CastGrid = styled.div`
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(auto-fill, minmax(188px, 1fr));
-  margin-top: 1rem;
 `;

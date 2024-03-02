@@ -12,10 +12,6 @@ export const Person = styled.figure`
 
 export const PersonInfo = styled.figcaption`
 overflow:hidden ;
-display: none;
-&.show-overview {
-  display: block;
-}
 `
 
 export const PersonImgWrapper = styled.div`

@@ -1,5 +1,5 @@
-import { useContext, useMemo } from "react";
-import * as R from "ramda"
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import * as R from "ramda";
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import PersonCard from "../../../../components/PersonCard";
 import {
@@ -12,46 +12,56 @@ import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import useIntersectionObserver from "../../../../hooks/useIntersectionObserver";
 import { chunkArray } from "../../../../utils/helper";
+import { VariableSizeList } from "react-window";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
 }
 const CastTabPanel = ({ data }: ITabPanelProps) => {
+  const listRef = useRef<VariableSizeList | null>(null);
+  const [itemHeights, setItemHeights] = useState<number[]>([]);
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
   const { department: departmentParam = "all" } = useParams();
+
   useIntersectionObserver({
     provideElementsToObserve: () => document.querySelectorAll(".person-card"),
-    onIntersect: (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+    onIntersect: (
+      entries: IntersectionObserverEntry[],
+      observer: IntersectionObserver
+    ) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
           const $target = entry.target as HTMLDivElement;
-          const $personInfo = document.getElementById(`person-info-${$target.dataset.id}`);
+          const $personInfo = document.getElementById(
+            `person-info-${$target.dataset.id}`
+          );
           const $personImg = $target.children[0].children[0];
 
           if ($personImg instanceof HTMLImageElement) {
-            if ($personImg.dataset.src) $personImg.setAttribute("src", $personImg.dataset.src)
-            $personImg.onload = () => $personImg.classList.remove("blurry")
+            if ($personImg.dataset.src)
+              $personImg.setAttribute("src", $personImg.dataset.src);
+            $personImg.onload = () => $personImg.classList.remove("blurry");
           }
-          $personInfo?.classList.add("show-overview")
+          $personInfo?.classList.add("show-overview");
           observer.unobserve($target);
         }
-      })
+      });
     },
     provideOptions: () => ({
       root: document.querySelector("#scroll-app-view"),
       rootMargin: "270px 0px",
-      threshold: 0
-    })
-  })
+      threshold: 0,
+    }),
+  });
 
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
 
   const groupByDepartment = R.groupBy(getTeamByDepartment);
   const teamDepartmentsOfThisCast = useMemo(() => {
-    return groupByDepartment(data)
+    return groupByDepartment(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -70,6 +80,26 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     );
   }, [departmentParam, teamDepartmentsOfThisCast, data]);
 
+  const dataChunks = chunkArray(dataNoDuplicated, 50);
+
+  useEffect(
+    function getItemSizes() {
+      const heights = Array.from({ length: dataChunks.length }, (_, i) => {
+        const $castGrid = document.getElementById(`cast-grid-${i}`) as Element;
+
+        let computedStyle = null;
+        if ($castGrid) {
+          computedStyle = getComputedStyle($castGrid);
+        }
+        return computedStyle ? parseInt(computedStyle.height) : 0;
+      });
+
+      setItemHeights(heights);
+      if (listRef.current) listRef.current.resetAfterIndex(0);
+    },
+    [dataChunks.length]
+  );
+
   const castDepartments = useMemo(() => {
     return [
       ...new Set(
@@ -82,8 +112,8 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     }));
   }, [data]);
 
-  const dataChunks = chunkArray(dataNoDuplicated, 50);
-  console.log(dataChunks)
+  const spacing = 16;
+
   return (
     <CastTabContainer>
       <Departments>
@@ -93,7 +123,8 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
             key={department.key}
             onClick={() => {
               const departmentSelected = department.key;
-              const $oldDepartment = document.querySelectorAll<HTMLDivElement>(".person-card");
+              const $oldDepartment =
+                document.querySelectorAll<HTMLDivElement>(".person-card");
               const newSelectedDepartment =
                 departmentSelected === "all"
                   ? data.reduce(dontDuplicateData, [])
@@ -106,9 +137,11 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
                     (item) => item.id === parseInt(personId)
                   );
                   if (newAndOldMatches)
-                    person.setAttribute("style", `view-transition-name: person-${person.dataset.id}`);
+                    person.setAttribute(
+                      "style",
+                      `view-transition-name: person-${person.dataset.id}`
+                    );
                 }
-
               });
               navigate(`../${department.key}`, {
                 relative: "path",
@@ -121,40 +154,42 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           </DeparmentName>
         ))}
       </Departments>
-      {dataChunks.map((dataChunk, index) => (
-        <CastGrid key={index} style={{ border: "2px solid red" }}>
-          {dataChunk.map((castPerson) => (
-            <PersonCard
-              className="person-card"
-              key={castPerson.id}
-              id={castPerson.id}
-              src={
-                castPerson.profile_path &&
-                `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
-              }
-              realName={castPerson.name}
-              characterName={castPerson.character}
-              department={castPerson.known_for_department}
-            />
-          ))}
-        </CastGrid>
-      ))}
-      {/* <CastGrid>
-        {dataNoDuplicated.map((castPerson) => (
-          <PersonCard
-            className="person-card"
-            key={castPerson.id}
-            id={castPerson.id}
-            src={
-              castPerson.profile_path &&
-              `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
-            }
-            realName={castPerson.name}
-            characterName={castPerson.character}
-            department={castPerson.known_for_department}
-          />
-        ))}
-      </CastGrid> */}
+      <VariableSizeList
+        ref={listRef}
+        width="100%"
+        itemData={dataChunks}
+        height={500}
+        itemCount={dataChunks.length}
+        itemSize={(index) => {
+          if (!itemHeights[index]) return 0;
+          return itemHeights[index] + spacing;
+        }}
+      >
+        {({ data: dataChunks, index, style }) => {
+          const dataChunk: ITmdbPerson[] = dataChunks[index];
+
+          return (
+            <div style={{ ...style }}>
+              <CastGrid id={`cast-grid-${index}`}>
+                {dataChunk.map((castPerson) => (
+                  <PersonCard
+                    className="person-card"
+                    key={castPerson.id}
+                    id={castPerson.id}
+                    src={
+                      castPerson.profile_path &&
+                      `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
+                    }
+                    realName={castPerson.name}
+                    characterName={castPerson.character}
+                    department={castPerson.known_for_department}
+                  />
+                ))}
+              </CastGrid>
+            </div>
+          );
+        }}
+      </VariableSizeList>
     </CastTabContainer>
   );
 };
