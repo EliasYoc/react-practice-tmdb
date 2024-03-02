@@ -10,7 +10,6 @@ import {
 } from "./styles";
 import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
-import useIntersectionObserver from "../../../../hooks/useIntersectionObserver";
 import { chunkArray } from "../../../../utils/helper";
 import { VariableSizeList } from "react-window";
 
@@ -24,37 +23,6 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
   const { department: departmentParam = "all" } = useParams();
-
-  useIntersectionObserver({
-    provideElementsToObserve: () => document.querySelectorAll(".person-card"),
-    onIntersect: (
-      entries: IntersectionObserverEntry[],
-      observer: IntersectionObserver
-    ) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const $target = entry.target as HTMLDivElement;
-          const $personInfo = document.getElementById(
-            `person-info-${$target.dataset.id}`
-          );
-          const $personImg = $target.children[0].children[0];
-
-          if ($personImg instanceof HTMLImageElement) {
-            if ($personImg.dataset.src)
-              $personImg.setAttribute("src", $personImg.dataset.src);
-            $personImg.onload = () => $personImg.classList.remove("blurry");
-          }
-          $personInfo?.classList.add("show-overview");
-          observer.unobserve($target);
-        }
-      });
-    },
-    provideOptions: () => ({
-      root: document.querySelector("#scroll-app-view"),
-      rootMargin: "270px 0px",
-      threshold: 0,
-    }),
-  });
 
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
@@ -143,6 +111,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
                     );
                 }
               });
+              // el codigo anterior ya no es necesario, como ahora se virtualiza con react-window (variableSizeList)
               navigate(`../${department.key}`, {
                 relative: "path",
                 replace: true,

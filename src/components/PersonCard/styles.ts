@@ -26,10 +26,6 @@ export const PersonImage = styled.img`
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-
-  &.blurry {
-    filter: blur(20px);
-  }
 `;
 
 export const PersonName = styled.h3`
