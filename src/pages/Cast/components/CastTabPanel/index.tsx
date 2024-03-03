@@ -12,6 +12,7 @@ import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import { chunkArray } from "../../../../utils/helper";
 import { VariableSizeList } from "react-window";
+import { throttle } from "lodash";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
@@ -51,19 +52,49 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const dataChunks = chunkArray(dataNoDuplicated, 50);
 
   useEffect(
-    function getItemSizes() {
-      const heights = Array.from({ length: dataChunks.length }, (_, i) => {
-        const $castGrid = document.getElementById(`cast-grid-${i}`) as Element;
+    () => {
+      const getInitiaalItemSizes = () => {
+        // la primera vez se renderizan todos los elementos en VariableSizeList antes de virtualizar
 
-        let computedStyle = null;
-        if ($castGrid) {
-          computedStyle = getComputedStyle($castGrid);
-        }
-        return computedStyle ? parseInt(computedStyle.height) : 0;
-      });
+        const heights = Array.from({ length: dataChunks.length }, (_, i) => {
+          const $castGrid = document.getElementById(`cast-grid-${i}`) as Element;
 
-      setItemHeights(heights);
-      if (listRef.current) listRef.current.resetAfterIndex(0);
+          let computedStyle = null;
+          if ($castGrid) {
+            computedStyle = getComputedStyle($castGrid);
+          }
+
+          return computedStyle ? parseInt(computedStyle.height) : 0;
+        });
+
+        setItemHeights(heights);
+        if (listRef.current) listRef.current.resetAfterIndex(0);
+      }
+      const recalculateItemSizes = throttle(() => {
+        const elements = Array.from(document.querySelectorAll<HTMLDivElement>(".cast-grid"));
+
+        const $firstElementWithAvailableHeight = elements.find(($el) => {
+          const computedStyle = getComputedStyle($el);
+          return computedStyle?.height
+        })
+
+        const firstElementHeight = $firstElementWithAvailableHeight ? parseInt((getComputedStyle($firstElementWithAvailableHeight)?.height)) : 0;
+
+        setItemHeights(prev => {
+          return prev.map((itemHeight, i) => {
+            if (i + 1 < prev.length) return firstElementHeight;
+            return itemHeight
+          })
+        })
+
+        if (listRef.current) listRef.current.resetAfterIndex(0);
+      }, 150);
+
+      window.addEventListener("resize", recalculateItemSizes);
+      getInitiaalItemSizes();
+      return () => {
+        window.removeEventListener("resize", recalculateItemSizes);
+      };
     },
     [dataChunks.length]
   );
@@ -138,8 +169,8 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           const dataChunk: ITmdbPerson[] = dataChunks[index];
 
           return (
-            <div style={{ ...style }}>
-              <CastGrid id={`cast-grid-${index}`}>
+            <div style={{ ...style, }}>
+              <CastGrid id={`cast-grid-${index}`} className="cast-grid">
                 {dataChunk.map((castPerson) => (
                   <PersonCard
                     className="person-card"
@@ -159,7 +190,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           );
         }}
       </VariableSizeList>
-    </CastTabContainer>
+    </CastTabContainer >
   );
 };
 
