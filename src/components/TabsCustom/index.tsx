@@ -13,6 +13,7 @@ const TabPanel = ({ children, value, index }: IPanel) => {
       hidden={value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
+      style={{ flexGrow: 1 }}
     >
       {value === index && children}
     </div>

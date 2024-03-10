@@ -1,9 +1,10 @@
 import styled from "styled-components";
 
 export const CastTabContainer = styled.div`
-  padding: 1rem;
+  padding: 1rem 0;
   display: flex ;
   flex-direction: column;
+  height: 100% ;
 `;
 
 export const Departments = styled.div`
