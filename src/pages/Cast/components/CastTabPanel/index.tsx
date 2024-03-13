@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useMemo } from "react";
 import * as R from "ramda";
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import PersonCard from "../../../../components/PersonCard";
@@ -11,15 +11,13 @@ import {
 import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
 import { chunkArray } from "../../../../utils/helper";
-import { VariableSizeList } from "react-window";
-import { throttle } from "lodash";
+import ReactVirtualizedAutoSizer from "react-virtualized-auto-sizer";
+import CustomVariableSizeList from "../CustomVariableSizeList";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
 }
 const CastTabPanel = ({ data }: ITabPanelProps) => {
-  const listRef = useRef<VariableSizeList | null>(null);
-  const [itemHeights, setItemHeights] = useState<number[]>([]);
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
@@ -51,53 +49,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
 
   const dataChunks = chunkArray(dataNoDuplicated, 50);
 
-  useEffect(
-    () => {
-      const getInitiaalItemSizes = () => {
-        // la primera vez se renderizan todos los elementos en VariableSizeList antes de virtualizar
 
-        const heights = Array.from({ length: dataChunks.length }, (_, i) => {
-          const $castGrid = document.getElementById(`cast-grid-${i}`) as Element;
-
-          let computedStyle = null;
-          if ($castGrid) {
-            computedStyle = getComputedStyle($castGrid);
-          }
-
-          return computedStyle ? parseInt(computedStyle.height) : 0;
-        });
-
-        setItemHeights(heights);
-        if (listRef.current) listRef.current.resetAfterIndex(0);
-      }
-      const recalculateItemSizes = throttle(() => {
-        const elements = Array.from(document.querySelectorAll<HTMLDivElement>(".cast-grid"));
-
-        const $firstElementWithAvailableHeight = elements.find(($el) => {
-          const computedStyle = getComputedStyle($el);
-          return computedStyle?.height
-        })
-
-        const firstElementHeight = $firstElementWithAvailableHeight ? parseInt((getComputedStyle($firstElementWithAvailableHeight)?.height)) : 0;
-
-        setItemHeights(prev => {
-          return prev.map((itemHeight, i) => {
-            if (i + 1 < prev.length) return firstElementHeight;
-            return itemHeight
-          })
-        })
-
-        if (listRef.current) listRef.current.resetAfterIndex(0);
-      }, 150);
-
-      window.addEventListener("resize", recalculateItemSizes);
-      getInitiaalItemSizes();
-      return () => {
-        window.removeEventListener("resize", recalculateItemSizes);
-      };
-    },
-    [dataChunks.length]
-  );
 
   const castDepartments = useMemo(() => {
     return [
@@ -111,7 +63,6 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     }));
   }, [data]);
 
-  const spacing = 16;
 
   return (
     <CastTabContainer>
@@ -154,42 +105,45 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           </DeparmentName>
         ))}
       </Departments>
-      <VariableSizeList
-        ref={listRef}
-        width="100%"
-        itemData={dataChunks}
-        height={500}
-        itemCount={dataChunks.length}
-        itemSize={(index) => {
-          if (!itemHeights[index]) return 0;
-          return itemHeights[index] + spacing;
-        }}
-      >
-        {({ data: dataChunks, index, style }) => {
-          const dataChunk: ITmdbPerson[] = dataChunks[index];
+      {/* todo: use autosizer component */}
+      <div style={{ flex: 1 }}>
+        <ReactVirtualizedAutoSizer style={{ width: "100%", flexGrow: 1 }}>
+          {({ height, width }) => (
+            <CustomVariableSizeList
+              width={width}
+              itemData={dataChunks}
+              height={height}
+              itemCount={dataChunks.length}
 
-          return (
-            <div style={{ ...style, }}>
-              <CastGrid id={`cast-grid-${index}`} className="cast-grid">
-                {dataChunk.map((castPerson) => (
-                  <PersonCard
-                    className="person-card"
-                    key={castPerson.id}
-                    id={castPerson.id}
-                    src={
-                      castPerson.profile_path &&
-                      `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
-                    }
-                    realName={castPerson.name}
-                    characterName={castPerson.character}
-                    department={castPerson.known_for_department}
-                  />
-                ))}
-              </CastGrid>
-            </div>
-          );
-        }}
-      </VariableSizeList>
+            >
+              {({ data: chunks, index, style }: { data: ITmdbPerson[][]; index: number; style: React.CSSProperties; }) => {
+                const dataChunk: ITmdbPerson[] = chunks[index];
+
+                return (
+                  <div style={{ ...style, paddingTop: "1rem" }}>
+                    <CastGrid id={`cast-grid-${index}`} className="cast-grid">
+                      {dataChunk.map((castPerson) => (
+                        <PersonCard
+                          className="person-card"
+                          key={castPerson.id}
+                          id={castPerson.id}
+                          src={
+                            castPerson.profile_path &&
+                            `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
+                          }
+                          realName={castPerson.name}
+                          characterName={castPerson.character}
+                          department={castPerson.known_for_department}
+                        />
+                      ))}
+                    </CastGrid>
+                  </div>
+                );
+              }}
+            </CustomVariableSizeList>
+          )}
+        </ReactVirtualizedAutoSizer>
+      </div>
     </CastTabContainer >
   );
 };
