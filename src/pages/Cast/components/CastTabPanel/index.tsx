@@ -108,9 +108,9 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
       {/* todo: use autosizer component */}
       <div style={{ flex: 1 }}>
         <ReactVirtualizedAutoSizer style={{ width: "100%", flexGrow: 1 }}>
-          {({ height, width }) => (
+          {({ height }) => (
             <CustomVariableSizeList
-              width={width}
+              width="100%"
               itemData={dataChunks}
               height={height}
               itemCount={dataChunks.length}
