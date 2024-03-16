@@ -5,15 +5,16 @@ interface IPanel {
   children?: JSX.Element;
   index: number;
   value: number;
+  style?: React.CSSProperties;
 }
-const TabPanel = ({ children, value, index }: IPanel) => {
+const TabPanel = ({ children, value, index, style }: IPanel) => {
   return (
     <div
       role="tabpanel"
       hidden={value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
-      style={{ flexGrow: 1 }}
+      style={{ flexGrow: 1, ...style }}
     >
       {value === index && children}
     </div>
@@ -33,11 +34,11 @@ interface ITabsProps {
   tabList: (ITab | null)[];
   // idKey?: string;
   onChange?: (event: SyntheticEvent<Element, Event>) => void;
+  tabPanelStyle?: React.CSSProperties;
 }
 
-const TabsCustom = ({ tabList, onChange }: ITabsProps) => {
+const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
   const [value, setValue] = useState(0);
-
 
   const handleChange = (
     event: SyntheticEvent<Element, Event>,
@@ -66,7 +67,12 @@ const TabsCustom = ({ tabList, onChange }: ITabsProps) => {
       </Tabs>
       {tabList.map((tab, index: number) => {
         return (
-          <TabPanel key={index} value={value} index={index}>
+          <TabPanel
+            style={tabPanelStyle}
+            key={index}
+            value={value}
+            index={index}
+          >
             {tab?.tabPanel}
           </TabPanel>
         );
