@@ -40,6 +40,7 @@ interface ITabsProps {
 const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
   const [value, setValue] = useState(0);
 
+  const filteredTabList = tabList.filter((item) => item !== null);
   const handleChange = (
     event: SyntheticEvent<Element, Event>,
     newValue: number
@@ -50,7 +51,7 @@ const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
   return (
     <>
       <Tabs value={value} onChange={handleChange}>
-        {tabList.map((tab, index: number) => {
+        {filteredTabList.map((tab, index: number) => {
           const tabProps = {
             ...tab,
           };
@@ -65,7 +66,7 @@ const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
           );
         })}
       </Tabs>
-      {tabList.map((tab, index: number) => {
+      {filteredTabList.map((tab, index: number) => {
         return (
           <TabPanel
             style={tabPanelStyle}

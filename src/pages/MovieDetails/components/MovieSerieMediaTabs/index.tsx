@@ -106,23 +106,24 @@ const MovieSerieMediaTabs = () => {
             />
           ),
         },
-        {
-          label: "Logos",
-          tabPanel: (
-            <CustomSwiper
-              pagination={{ clickable: true }}
-              swiperSlideStyle={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "300px",
-              }}
-              cssMode
-              sliders={logosSliders}
-            />
-          ),
-        },
-        null,
+        batchOfImages.logos.count > 0
+          ? {
+              label: "Logos",
+              tabPanel: (
+                <CustomSwiper
+                  pagination={{ clickable: true }}
+                  swiperSlideStyle={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "300px",
+                  }}
+                  cssMode
+                  sliders={logosSliders}
+                />
+              ),
+            }
+          : null,
         {
           label: "Backdrops",
           tabPanel: (
