@@ -5,22 +5,30 @@ import { useParams } from "react-router-dom";
 import CustomSwiper from "../../../../components/CustomSwiper";
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import "./styles.css";
-import { mediaQueries } from "../../../../utils/helper";
-import { useMediaQuery } from "../../../../hooks/useMediaQuery";
 import { SwiperCard } from "./styles";
+import { TheShowImage } from "../../../../types";
 
 const initialBatchOfImages = {
   logos: { count: 0, data: [] },
   posters: { count: 0, data: [] },
   backdrops: { count: 0, data: [] },
 };
+interface IBatchOfImages {
+  logos: IImageResult;
+  posters: IImageResult;
+  backdrops: IImageResult;
+}
+interface IImageResult {
+  count: number;
+  data: TheShowImage[];
+}
+
 const MovieSerieMediaTabs = () => {
   const { id, mediaType } = useParams();
-  const matchSmScreen = useMediaQuery(mediaQueries.sm);
-
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
-  const [batchOfImages, setBatchOfImages] = useState(initialBatchOfImages);
+  const [batchOfImages, setBatchOfImages] =
+    useState<IBatchOfImages>(initialBatchOfImages);
 
   useEffect(() => {
     const getMedia = async () => {
@@ -31,14 +39,14 @@ const MovieSerieMediaTabs = () => {
           pathRest: "/images",
         });
         setBatchOfImages({
-          logos: { count: data.logos.length, data: data.logos.slice(0, 9) },
+          logos: { count: data.logos.length, data: data.logos.slice(0, 7) },
           posters: {
             count: data.posters.length,
-            data: data.posters.slice(0, 9),
+            data: data.posters.slice(0, 7),
           },
           backdrops: {
             count: data.backdrops.length,
-            data: data.backdrops.slice(0, 9),
+            data: data.backdrops.slice(0, 7),
           },
         });
         console.log(data);

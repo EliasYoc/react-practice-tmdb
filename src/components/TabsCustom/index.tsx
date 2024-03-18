@@ -1,5 +1,6 @@
-import { Tab, Tabs } from "@mui/material";
 import { SyntheticEvent, useState } from "react";
+import { StyledTabs } from "./components/StyledTabs";
+import { StyledTab } from "./components/StyledTab";
 
 interface IPanel {
   children?: JSX.Element;
@@ -50,14 +51,14 @@ const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
   };
   return (
     <>
-      <Tabs value={value} onChange={handleChange}>
+      <StyledTabs value={value} onChange={handleChange}>
         {filteredTabList.map((tab, index: number) => {
           const tabProps = {
             ...tab,
           };
           delete tabProps.tabPanel;
           return (
-            <Tab
+            <StyledTab
               {...tabProps}
               key={index}
               id={`tab-${index}`}
@@ -65,7 +66,7 @@ const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
             />
           );
         })}
-      </Tabs>
+      </StyledTabs>
       {filteredTabList.map((tab, index: number) => {
         return (
           <TabPanel
