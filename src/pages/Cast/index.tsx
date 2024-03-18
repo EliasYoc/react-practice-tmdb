@@ -21,7 +21,7 @@ const Cast = () => {
   }, [])
   console.log("tabs")
   return (
-    <div>
+    <>
       <TabsCustom
         onChange={tabsHandleChange}
         tabList={[
@@ -29,7 +29,7 @@ const Cast = () => {
           { label: "Crew", tabPanel: <CastTabPanel data={memoTeam.crew} /> },
         ]}
       />
-    </div>
+    </>
   );
 };
 

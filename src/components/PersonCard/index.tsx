@@ -29,9 +29,8 @@ const PersonCard = ({
       <PersonImgWrapper>
         {src ? (
           <PersonImage
-            className="blurry"
             loading="lazy"
-            data-src={src}
+            src={src}
             alt={realName}
           />
         ) : (
