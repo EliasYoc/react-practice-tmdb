@@ -1,5 +1,5 @@
 import { useContext, useMemo } from "react";
-import * as R from "ramda"
+import * as R from "ramda";
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import PersonCard from "../../../../components/PersonCard";
 import {
@@ -10,7 +10,9 @@ import {
 } from "./styles";
 import { ITmdbPerson } from "../../../../types";
 import { useNavigate, useParams } from "react-router-dom";
-import useIntersectionObserver from "../../../../hooks/useIntersectionObserver";
+import { chunkArray } from "../../../../utils/helper";
+import ReactVirtualizedAutoSizer from "react-virtualized-auto-sizer";
+import CustomVariableSizeList from "../CustomVariableSizeList";
 
 interface ITabPanelProps {
   data: ITmdbPerson[];
@@ -20,37 +22,13 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
   const images = tmdbConfigurationDetails?.images;
   const navigate = useNavigate();
   const { department: departmentParam = "all" } = useParams();
-  useIntersectionObserver({
-    provideElementsToObserve: () => document.querySelectorAll(".person-card"),
-    onIntersect: (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const $target = entry.target as HTMLDivElement;
-          const $personInfo = document.getElementById(`person-info-${$target.dataset.id}`);
-          const $personImg = $target.children[0].children[0];
-
-          if ($personImg instanceof HTMLImageElement) {
-            if ($personImg.dataset.src) $personImg.setAttribute("src", $personImg.dataset.src)
-            $personImg.onload = () => $personImg.classList.remove("blurry")
-          }
-          $personInfo?.classList.add("show-overview")
-          observer.unobserve($target);
-        }
-      })
-    },
-    provideOptions: () => ({
-      root: document.querySelector("#scroll-app-view"),
-      rootMargin: "270px 0px",
-      threshold: 0
-    })
-  })
 
   const getTeamByDepartment = ({ known_for_department }: ITmdbPerson) =>
     known_for_department.toLowerCase().split(" ").join("_");
 
   const groupByDepartment = R.groupBy(getTeamByDepartment);
   const teamDepartmentsOfThisCast = useMemo(() => {
-    return groupByDepartment(data)
+    return groupByDepartment(data);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -69,6 +47,10 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     );
   }, [departmentParam, teamDepartmentsOfThisCast, data]);
 
+  const dataChunks = chunkArray(dataNoDuplicated, 50);
+
+
+
   const castDepartments = useMemo(() => {
     return [
       ...new Set(
@@ -81,6 +63,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
     }));
   }, [data]);
 
+
   return (
     <CastTabContainer>
       <Departments>
@@ -90,7 +73,8 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
             key={department.key}
             onClick={() => {
               const departmentSelected = department.key;
-              const $oldDepartment = document.querySelectorAll<HTMLDivElement>(".person-card");
+              const $oldDepartment =
+                document.querySelectorAll<HTMLDivElement>(".person-card");
               const newSelectedDepartment =
                 departmentSelected === "all"
                   ? data.reduce(dontDuplicateData, [])
@@ -103,10 +87,13 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
                     (item) => item.id === parseInt(personId)
                   );
                   if (newAndOldMatches)
-                    person.setAttribute("style", `view-transition-name: person-${person.dataset.id}`);
+                    person.setAttribute(
+                      "style",
+                      `view-transition-name: person-${person.dataset.id}`
+                    );
                 }
-
               });
+              // el codigo anterior ya no es necesario, como ahora se virtualiza con react-window (variableSizeList)
               navigate(`../${department.key}`, {
                 relative: "path",
                 replace: true,
@@ -118,23 +105,46 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           </DeparmentName>
         ))}
       </Departments>
-      <CastGrid>
-        {dataNoDuplicated.map((castPerson) => (
-          <PersonCard
-            className="person-card"
-            key={castPerson.id}
-            id={castPerson.id}
-            src={
-              castPerson.profile_path &&
-              `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
-            }
-            realName={castPerson.name}
-            characterName={castPerson.character}
-            department={castPerson.known_for_department}
-          />
-        ))}
-      </CastGrid>
-    </CastTabContainer>
+      {/* todo: use autosizer component */}
+      <div style={{ flex: 1 }}>
+        <ReactVirtualizedAutoSizer style={{ width: "100%", flexGrow: 1 }}>
+          {({ height }) => (
+            <CustomVariableSizeList
+              width="100%"
+              itemData={dataChunks}
+              height={height}
+              itemCount={dataChunks.length}
+
+            >
+              {({ data: chunks, index, style }: { data: ITmdbPerson[][]; index: number; style: React.CSSProperties; }) => {
+                const dataChunk: ITmdbPerson[] = chunks[index];
+
+                return (
+                  <div style={{ ...style, paddingTop: "1rem" }}>
+                    <CastGrid id={`cast-grid-${index}`} className="cast-grid">
+                      {dataChunk.map((castPerson) => (
+                        <PersonCard
+                          className="person-card"
+                          key={castPerson.id}
+                          id={castPerson.id}
+                          src={
+                            castPerson.profile_path &&
+                            `${images?.base_url}${images?.profile_sizes[0]}${castPerson.profile_path}`
+                          }
+                          realName={castPerson.name}
+                          characterName={castPerson.character}
+                          department={castPerson.known_for_department}
+                        />
+                      ))}
+                    </CastGrid>
+                  </div>
+                );
+              }}
+            </CustomVariableSizeList>
+          )}
+        </ReactVirtualizedAutoSizer>
+      </div>
+    </CastTabContainer >
   );
 };
 

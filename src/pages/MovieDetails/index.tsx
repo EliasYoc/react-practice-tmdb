@@ -8,6 +8,7 @@ import { formatDate, mediaQueries } from "../../utils/helper";
 import MovieSerieCardInfo from "../../components/PageCover/components/MovieSerieCardInfo";
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { IMovieSerieDetail } from "../../types";
+import MovieSerieMediaTabs from "./components/MovieSerieMediaTabs";
 
 interface ReusableMovieShowDetails {
   title?: string;
@@ -69,6 +70,7 @@ const MovieDetails = () => {
           {matchMdScreen && (
             <MovieSerieCardInfo {...reusableMovieShowDetails} />
           )}
+          <MovieSerieMediaTabs />
         </main>
       </div>
     </MainSection>

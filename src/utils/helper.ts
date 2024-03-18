@@ -27,7 +27,13 @@ export const formatDate = (
     if (average >= 0) return "#fb4b4b";
     return "#3e98c7";
 };
-  
+
+export const chunkArray = <T>(array: T[], size: number) => {
+    return Array.from({ length: Math.ceil(array.length / size) }, (_, i) =>
+      array.slice(i * size, i * size + size)
+    );
+  };
+
 export const mediaQueries = {
   sm: "(max-width: 640px)",
   md: "(max-width: 768px)",

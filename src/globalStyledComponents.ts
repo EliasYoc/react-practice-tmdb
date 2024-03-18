@@ -5,6 +5,8 @@ export const ViewFullHeight = styled.div`
   flex-grow: 1;
   padding-top: var(--header-height);
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 
   @media only screen and (${mediaQueries.md}) {
     padding-bottom: var(--header-height) ;
