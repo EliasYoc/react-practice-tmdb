@@ -49,8 +49,6 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
 
   const dataChunks = chunkArray(dataNoDuplicated, 50);
 
-
-
   const castDepartments = useMemo(() => {
     return [
       ...new Set(
@@ -62,7 +60,6 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
       key: departmentName.toLowerCase().split(" ").join("_"),
     }));
   }, [data]);
-
 
   return (
     <CastTabContainer>
@@ -114,9 +111,16 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
               itemData={dataChunks}
               height={height}
               itemCount={dataChunks.length}
-
             >
-              {({ data: chunks, index, style }: { data: ITmdbPerson[][]; index: number; style: React.CSSProperties; }) => {
+              {({
+                data: chunks,
+                index,
+                style,
+              }: {
+                data: ITmdbPerson[][];
+                index: number;
+                style: React.CSSProperties;
+              }) => {
                 const dataChunk: ITmdbPerson[] = chunks[index];
 
                 return (
@@ -144,7 +148,7 @@ const CastTabPanel = ({ data }: ITabPanelProps) => {
           )}
         </ReactVirtualizedAutoSizer>
       </div>
-    </CastTabContainer >
+    </CastTabContainer>
   );
 };
 

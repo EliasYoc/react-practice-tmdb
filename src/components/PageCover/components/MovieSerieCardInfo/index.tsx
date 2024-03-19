@@ -1,19 +1,33 @@
-import { CircularProgressbarWrapper, CoverButtonsContainer, Info, MovieTitle, Overview } from './styles'
-import TmdbCircularPtogressBar from '../../../TmbdCircularProgressBar'
-import Button from '../../../Button'
-import { useNavigate } from 'react-router-dom'
+import {
+  CircularProgressbarWrapper,
+  CoverButtonsContainer,
+  Info,
+  MovieTitle,
+  Overview,
+} from "./styles";
+import TmdbCircularPtogressBar from "../../../TmbdCircularProgressBar";
+import Button from "../../../Button";
+import { useNavigate } from "react-router-dom";
+import { CSSProperties } from "react";
 
 interface CardInfoProps {
-  title?: string
-  releaseDate?: string
-  average: number
-  overview?: string
+  title?: string;
+  releaseDate?: string;
+  average: number;
+  overview?: string;
+  cardStyle?: CSSProperties;
 }
-const MovieSerieCardInfo = ({ title, releaseDate, average, overview }: CardInfoProps) => {
+const MovieSerieCardInfo = ({
+  title,
+  releaseDate,
+  average,
+  overview,
+  cardStyle,
+}: CardInfoProps) => {
   const navigate = useNavigate();
 
   return (
-    <Info>
+    <Info style={cardStyle}>
       <header>
         <MovieTitle>
           {title}
@@ -43,13 +57,16 @@ const MovieSerieCardInfo = ({ title, releaseDate, average, overview }: CardInfoP
             text={(average * 10)?.toFixed(2)?.toString() + "%"}
           />
         </CircularProgressbarWrapper>
-        <Button tooltiptitle="Cast and Crew" onClick={() => {
-          navigate("cast/all", { unstable_viewTransition: true })
-        }} />
+        <Button
+          tooltiptitle="Cast and Crew"
+          onClick={() => {
+            navigate("cast/all", { unstable_viewTransition: true });
+          }}
+        />
       </CoverButtonsContainer>
       <Overview>{overview}</Overview>
     </Info>
-  )
-}
+  );
+};
 
-export default MovieSerieCardInfo
+export default MovieSerieCardInfo;

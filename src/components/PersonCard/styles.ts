@@ -4,19 +4,20 @@ export const Person = styled.figure`
   display: flex;
   gap: 0.5rem;
   border-radius: 0.5rem;
-  background: #efefef;
+  background: var(--box-bg-color);
+  color: var(--text-color);
   overflow: hidden;
   box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.17);
   min-height: 70px;
 `;
 
 export const PersonInfo = styled.figcaption`
-overflow:hidden ;
-`
+  overflow: hidden;
+`;
 
 export const PersonImgWrapper = styled.div`
   width: 70px;
-  display: flex ;
+  display: flex;
   flex-shrink: 0;
   align-self: center;
   justify-content: center;
@@ -29,16 +30,16 @@ export const PersonImage = styled.img`
 `;
 
 export const PersonName = styled.h3`
-font-size: 1rem;
-text-overflow: ellipsis;
-overflow: hidden ;
-white-space: nowrap ;
+  font-size: 1rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 `;
 
 export const PersonCharacterName = styled.p`
   font-size: 0.8rem;
-  color: #525252;
+  color: var(--secondary-text-color);
   text-overflow: ellipsis;
-  overflow: hidden ;
-  white-space: nowrap ;
-`
+  overflow: hidden;
+  white-space: nowrap;
+`;

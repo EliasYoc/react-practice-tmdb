@@ -28,13 +28,11 @@ const PersonCard = ({
     <Person className={className} data-id={id}>
       <PersonImgWrapper>
         {src ? (
-          <PersonImage
-            loading="lazy"
-            src={src}
-            alt={realName}
-          />
+          <PersonImage loading="lazy" src={src} alt={realName} />
         ) : (
-          <FaPersonCircleQuestion style={{ fontSize: "2rem" }} />
+          <FaPersonCircleQuestion
+            style={{ fontSize: "2rem", color: "var(--text-color)" }}
+          />
         )}
       </PersonImgWrapper>
       <PersonInfo id={`person-info-${id}`}>

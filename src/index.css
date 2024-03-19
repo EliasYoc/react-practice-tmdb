@@ -10,7 +10,7 @@
   -webkit-text-size-adjust: 100%;
 
   --mob-responsive-poster-top: 10vh;
-  --header-height: 4rem;
+  --header-height: 72px;
 }
 
 *,
@@ -27,4 +27,21 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  background: var(--main-bg-color);
+}
+
+.light {
+  --main-bg-color: rgb(226, 226, 226);
+  --box-bg-color: rgb(255, 255, 255);
+  --box-transparent-bg-color: #ffffff8f;
+  --text-color: rgb(30, 30, 30);
+  --secondary-text-color: #525252;
+}
+
+.dark {
+  --main-bg-color: rgb(30, 30, 30);
+  --box-bg-color: rgb(53, 53, 53);
+  --box-transparent-bg-color: #2020208f;
+  --text-color: rgb(226, 226, 226);
+  --secondary-text-color: #b3b3b3;
 }
