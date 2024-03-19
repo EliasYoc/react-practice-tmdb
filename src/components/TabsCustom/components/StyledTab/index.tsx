@@ -13,7 +13,9 @@ export const StyledTab = styled((props: StyledTabProps) => <Tab {...props} />)(
     transition: theme.transitions.create("color", {
       duration: theme.transitions.duration.shortest,
     }),
-    color: "rgba(0, 0, 0, 0.6)",
+    color: "var(--secondary-text-color)",
+    position: "relative",
+    zIndex: 1,
     "&.Mui-selected": {
       color: "#fff",
     },

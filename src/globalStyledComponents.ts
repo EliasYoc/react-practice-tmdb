@@ -9,7 +9,7 @@ export const ViewFullHeight = styled.div`
   flex-direction: column;
 
   @media only screen and (${mediaQueries.md}) {
-    padding-bottom: var(--header-height) ;
-    padding-top:0 ;
+    padding-bottom: var(--header-height);
+    padding-top: 0;
   }
-`
+`;
