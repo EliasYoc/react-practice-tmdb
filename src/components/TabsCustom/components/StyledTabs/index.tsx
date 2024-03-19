@@ -16,7 +16,7 @@ export const StyledTabs = styled((props: StyledTabsProps) => (
     top: "50%",
     transform: "translateY(-50%)",
     height: "35px",
-    zIndex: -1,
+    zIndex: 0,
     bottom: "auto",
     display: "flex",
     justifyContent: "center",

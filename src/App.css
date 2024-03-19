@@ -15,6 +15,17 @@
 ::view-transition-new(root) {
   animation-duration: 2s;
 } */
+::view-transition-image-pair(root) {
+  isolation: auto;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  display: block;
+}
+
 ::view-transition-group(*) {
   animation-duration: 0.44s;
   animation-timing-function: ease-in-out;

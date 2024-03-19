@@ -39,7 +39,7 @@ const MovieDetails = () => {
       }
     };
     getMovie();
-    return () => { };
+    return () => {};
   }, [id, mediaType]);
 
   if (movieDetails) {
@@ -61,14 +61,21 @@ const MovieDetails = () => {
     <MainSection>
       <PageCover
         {...reusableMovieShowDetails}
-        srcPoster={`${images?.base_url}${images?.poster_sizes && images.poster_sizes[4]
-          }${movieDetails?.poster_path}`}
+        srcPoster={`${images?.base_url}${
+          images?.poster_sizes && images.poster_sizes[4]
+        }${movieDetails?.poster_path}`}
         srcBackdrop={`${images?.base_url}${images?.backdrop_sizes[0]}${movieDetails?.backdrop_path}`}
       />
       <div>
         <main>
           {matchMdScreen && (
-            <MovieSerieCardInfo {...reusableMovieShowDetails} />
+            <MovieSerieCardInfo
+              {...reusableMovieShowDetails}
+              cardStyle={{
+                background: "var(--box-bg-color",
+                color: "var(--text-color)",
+              }}
+            />
           )}
           <MovieSerieMediaTabs />
         </main>
