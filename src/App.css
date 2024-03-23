@@ -9,6 +9,26 @@
     mix-blend-mode: normal;
   }
 }
+
+::-webkit-scrollbar {
+  width: 0.2rem;
+  height: 0.2rem;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--main-bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--box-bg-color);
+  outline: 1px solid slategrey;
+  border-radius: 0.5rem;
+}
+
+img {
+  filter: brightness(var(--filter-brightness));
+}
+
 /* ::view-transition-old(var(--posterViewTransitionName)) */
 /* TODO probar esto en styled components */
 /* ::view-transition-old(root),
