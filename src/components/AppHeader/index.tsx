@@ -8,7 +8,7 @@ import {
 } from "./styles";
 import { LuArrowLeft } from "react-icons/lu";
 import { IconButton } from "@mui/material";
-import { CiDark } from "react-icons/ci";
+import { CiDark, CiLight } from "react-icons/ci";
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import { darkModeState } from "../../atoms/appConfigAtom";
@@ -40,6 +40,7 @@ const AppHeader = () => {
       </HeaderLeft>
       <HeaderRight>
         <IconButton
+          style={{ color: "var(--text-color)" }}
           onClick={(e) => {
             const lastClick = e;
             const transition = makeViewTransition(() => {
@@ -78,7 +79,7 @@ const AppHeader = () => {
           }}
           size="medium"
         >
-          <CiDark />
+          {isDarkMode ? <CiLight /> : <CiDark />}
         </IconButton>
       </HeaderRight>
     </Header>

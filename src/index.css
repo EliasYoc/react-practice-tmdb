@@ -36,6 +36,7 @@
   --box-transparent-bg-color: #ffffff8f;
   --text-color: rgb(30, 30, 30);
   --secondary-text-color: #525252;
+  --filter-brightness: 1;
 }
 
 .dark {
@@ -44,4 +45,5 @@
   --box-transparent-bg-color: #2020208f;
   --text-color: rgb(226, 226, 226);
   --secondary-text-color: #b3b3b3;
+  --filter-brightness: 0.65;
 }
