@@ -27,7 +27,16 @@ interface MovieCardProps {
   mediaType: "movie" | "tv";
 }
 
-const MovieCard = ({ src, backdropSrc, average, title, id, releaseDate = "00-00-0000", description, mediaType }: MovieCardProps) => {
+const MovieCard = ({
+  src,
+  backdropSrc,
+  average,
+  title,
+  id,
+  releaseDate = "00-00-0000",
+  description,
+  mediaType,
+}: MovieCardProps) => {
   const navigate = useNavigate();
   const to = `/${mediaType}/${id}`;
   const [isOverviewOpen, setIsOverviewOpen] = useState(false);

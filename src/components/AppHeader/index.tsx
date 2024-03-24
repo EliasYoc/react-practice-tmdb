@@ -42,6 +42,10 @@ const AppHeader = () => {
         <IconButton
           style={{ color: "var(--text-color)" }}
           onClick={(e) => {
+            document.documentElement.classList.add(
+              "rootCircleDarkModeViewTransition"
+            );
+
             const lastClick = e;
             const transition = makeViewTransition(() => {
               setIsDarkMode(!isDarkMode);
@@ -73,6 +77,11 @@ const AppHeader = () => {
                     // Specify which pseudo-element to animate
                     pseudoElement: "::view-transition-new(root)",
                   }
+                );
+              });
+              transition.finished.then(() => {
+                document.documentElement.classList.remove(
+                  "rootCircleDarkModeViewTransition"
                 );
               });
             }

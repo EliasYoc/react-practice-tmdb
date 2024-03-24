@@ -13,7 +13,7 @@ export const Header = styled.header`
   color: var(--text-color);
   view-transition-name: app-header;
   justify-content: space-between;
-  z-index: 2;
+  z-index: 3;
   @media only screen and (${mediaQueries.md}) {
     top: auto;
     bottom: 0;
