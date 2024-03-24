@@ -48,6 +48,7 @@ const PageCover = ({
         <CoverDetails>
           <PosterWrapper>
             <Poster
+              className="detailsOfShowPoster"
               src={srcPoster}
               alt={title}
               style={posterInlineStyle}
@@ -63,7 +64,6 @@ const PageCover = ({
           )}
         </CoverDetails>
       </Cover>
-
     </>
   );
 };

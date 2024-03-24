@@ -45,6 +45,13 @@ const AppHeader = () => {
             document.documentElement.classList.add(
               "rootCircleDarkModeViewTransition"
             );
+            const $movieSerieDetailsPoster = document.querySelector(
+              ".detailsOfShowPoster"
+            ) as HTMLImageElement;
+            $movieSerieDetailsPoster.style.setProperty(
+              "--posterViewTransitionName",
+              ""
+            );
 
             const lastClick = e;
             const transition = makeViewTransition(() => {
@@ -82,6 +89,10 @@ const AppHeader = () => {
               transition.finished.then(() => {
                 document.documentElement.classList.remove(
                   "rootCircleDarkModeViewTransition"
+                );
+                $movieSerieDetailsPoster.style.setProperty(
+                  "--posterViewTransitionName",
+                  "poster"
                 );
               });
             }
