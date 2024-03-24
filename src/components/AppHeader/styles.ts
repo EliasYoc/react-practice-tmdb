@@ -11,9 +11,9 @@ export const Header = styled.header`
   background: var(--box-transparent-bg-color);
   backdrop-filter: blur(25px);
   color: var(--text-color);
-  view-transition-name: app-header;
   justify-content: space-between;
   z-index: 3;
+
   @media only screen and (${mediaQueries.md}) {
     top: auto;
     bottom: 0;

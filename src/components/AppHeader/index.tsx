@@ -25,7 +25,12 @@ const AppHeader = () => {
   }, [isDarkMode]);
 
   return (
-    <Header className="app-header">
+    <Header
+      className="app-header"
+      style={{
+        viewTransitionName: "app-header",
+      }}
+    >
       <HeaderLeft>
         {location.pathname !== "/" && (
           <IconWrapper onClick={() => navigate(-1)}>
@@ -47,8 +52,22 @@ const AppHeader = () => {
             );
             const $movieSerieDetailsPoster = document.querySelector(
               ".detailsOfShowPoster"
-            ) as HTMLImageElement;
-            $movieSerieDetailsPoster.style.setProperty(
+            ) as HTMLImageElement | null;
+            const $appHeader = document.querySelector(
+              ".app-header"
+            ) as HTMLDivElement;
+            const $avgProgressbar = document.querySelector(
+              ".avg-progressbar"
+            ) as HTMLDivElement;
+            const $infoDate = document.querySelector(
+              ".movie-series-info-release-date"
+            ) as HTMLSpanElement;
+
+            // creo que no se puede remover props de styled components TODO fix
+            $appHeader.style.removeProperty("view-transition-name");
+            $avgProgressbar?.style.removeProperty("view-transition-name");
+            $infoDate?.style.removeProperty("view-transition-name");
+            $movieSerieDetailsPoster?.style.setProperty(
               "--posterViewTransitionName",
               ""
             );
@@ -90,9 +109,22 @@ const AppHeader = () => {
                 document.documentElement.classList.remove(
                   "rootCircleDarkModeViewTransition"
                 );
-                $movieSerieDetailsPoster.style.setProperty(
+
+                $movieSerieDetailsPoster?.style.setProperty(
                   "--posterViewTransitionName",
                   "poster"
+                );
+                $appHeader.style.setProperty(
+                  "view-transition-name",
+                  "app-header"
+                );
+                $infoDate?.style.setProperty(
+                  "view-transition-name",
+                  "movie-series-release-date"
+                );
+                $avgProgressbar?.style.setProperty(
+                  "view-transition-name",
+                  "show-avg-progress"
                 );
               });
             }
