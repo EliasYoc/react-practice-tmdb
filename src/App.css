@@ -35,15 +35,15 @@ img {
 ::view-transition-new(root) {
   animation-duration: 2s;
 } */
-::view-transition-image-pair(root) {
-  isolation: auto;
+.rootCircleDarkModeViewTransition::view-transition-image-pair(root) {
+  isolation: var(--vt-image-pair-root-isolation);
 }
 
-::view-transition-old(root),
-::view-transition-new(root) {
-  animation: none;
-  mix-blend-mode: normal;
-  display: block;
+.rootCircleDarkModeViewTransition::view-transition-old(root),
+.rootCircleDarkModeViewTransition::view-transition-new(root) {
+  animation: var(--vt-old-new-root-animation);
+  mix-blend-mode: var(--vt-old-new-root-mix-blend-mode);
+  display: var(--vt-old-new-root-display);
 }
 
 ::view-transition-group(*) {

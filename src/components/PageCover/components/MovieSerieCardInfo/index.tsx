@@ -30,8 +30,9 @@ const MovieSerieCardInfo = ({
     <Info style={cardStyle}>
       <header>
         <MovieTitle>
-          {title}
+          {title}{" "}
           <span
+            className="movie-series-info-release-date"
             style={{
               // inline-block because the other related element is block
               display: "inline-block",
@@ -44,6 +45,7 @@ const MovieSerieCardInfo = ({
       </header>
       <CoverButtonsContainer>
         <CircularProgressbarWrapper
+          className="avg-progressbar"
           style={{
             viewTransitionName: "show-avg-progress",
             contain: "layout",
