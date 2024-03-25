@@ -12,7 +12,14 @@
   --mob-responsive-poster-top: 10vh;
   --header-height: 72px;
 }
+.rootCircleDarkModeViewTransition {
+  /* view transition */
+  --vt-image-pair-root-isolation: auto;
 
+  --vt-old-new-root-animation: none;
+  --vt-old-new-root-mix-blend-mode: normal;
+  --vt-old-new-root-display: block;
+}
 *,
 *::before,
 *::after {
