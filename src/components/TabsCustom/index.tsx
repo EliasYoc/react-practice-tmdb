@@ -1,6 +1,7 @@
 import { SyntheticEvent, useState } from "react";
 import { StyledTabs } from "./components/StyledTabs";
 import { StyledTab } from "./components/StyledTab";
+import { TabProps } from "@mui/material";
 
 interface IPanel {
   children?: JSX.Element;
@@ -21,14 +22,14 @@ const TabPanel = ({ children, value, index, style }: IPanel) => {
     </div>
   );
 };
-interface ITab {
+interface ITab extends TabProps {
   tabPanel?: JSX.Element;
   label: string;
-  disable?: boolean;
-  disableFocusRipple?: boolean;
-  icon?: string;
-  iconPosition?: "bottom" | "end" | "start" | "top";
-  wrapped?: boolean;
+  // disable?: boolean;
+  // disableFocusRipple?: boolean;
+  // icon?: string;
+  // iconPosition?: "bottom" | "end" | "start" | "top";
+  // wrapped?: boolean;
 }
 
 interface ITabsProps {
@@ -51,7 +52,7 @@ const TabsCustom = ({ tabList, onChange, tabPanelStyle }: ITabsProps) => {
   };
   return (
     <>
-      <StyledTabs value={value} onChange={handleChange}>
+      <StyledTabs variant="scrollable" value={value} onChange={handleChange}>
         {filteredTabList.map((tab, index: number) => {
           const tabProps = {
             ...tab,

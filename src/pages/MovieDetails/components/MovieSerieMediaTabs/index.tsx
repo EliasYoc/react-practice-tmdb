@@ -7,6 +7,7 @@ import { ConfigContext } from "../../../../context/ConfigurationContext";
 import "./styles.css";
 import { SwiperCard } from "./styles";
 import { TheShowImage } from "../../../../types";
+import { CustomGrid } from "../../../../globalStyledComponents";
 
 const initialBatchOfImages = {
   logos: { count: 0, data: [] },
@@ -23,12 +24,21 @@ interface IImageResult {
   data: TheShowImage[];
 }
 
+interface IImgListCollapsed {
+  [key: string]: boolean;
+}
 const MovieSerieMediaTabs = () => {
   const { id, mediaType } = useParams();
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
   const [batchOfImages, setBatchOfImages] =
     useState<IBatchOfImages>(initialBatchOfImages);
+  const [isImgListCollapsed, setIsImgListCollapsed] =
+    useState<IImgListCollapsed>({
+      logos: false,
+      posters: false,
+      backdrops: false,
+    });
 
   useEffect(() => {
     const getMedia = async () => {
@@ -99,13 +109,33 @@ const MovieSerieMediaTabs = () => {
       <p>see more</p>
     ) : null,
   ];
+
+  const collapseImageList = (label: string) => {
+    setIsImgListCollapsed((prev) => ({ ...prev, [label]: !prev[label] }));
+  };
+
   return (
     <TabsCustom
       tabPanelStyle={{ overflow: "hidden", padding: "1rem 0" }}
       tabList={[
         {
           label: "Posters",
-          tabPanel: (
+          tabPanel: isImgListCollapsed["posters"] ? (
+            <CustomGrid>
+              {batchOfImages.posters.data.map((item) => (
+                <img
+                  key={item.file_path}
+                  style={{
+                    width: "100%",
+                    aspectRatio: "2/3",
+                    borderRadius: "1rem",
+                    userSelect: "none",
+                  }}
+                  src={`${images?.base_url}${images?.profile_sizes[2]}${item.file_path}`}
+                />
+              ))}
+            </CustomGrid>
+          ) : (
             <CustomSwiper
               effect="cards"
               pagination={{ clickable: true }}
@@ -113,6 +143,9 @@ const MovieSerieMediaTabs = () => {
               style={{ width: "300px", overflow: "visible" }}
             />
           ),
+          onDoubleClick: () => {
+            collapseImageList("posters");
+          },
         },
         batchOfImages.logos.count > 0
           ? {
@@ -130,6 +163,9 @@ const MovieSerieMediaTabs = () => {
                   sliders={logosSliders}
                 />
               ),
+              onDoubleClick: () => {
+                collapseImageList("logos");
+              },
             }
           : null,
         {
@@ -141,6 +177,9 @@ const MovieSerieMediaTabs = () => {
               sliders={backdropsSliders}
             />
           ),
+          onDoubleClick: () => {
+            collapseImageList("backdrops");
+          },
         },
       ]}
     />
