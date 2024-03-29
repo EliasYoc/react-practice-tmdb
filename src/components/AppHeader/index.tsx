@@ -62,8 +62,11 @@ const AppHeader = () => {
             const $infoDate = document.querySelector(
               ".movie-series-info-release-date"
             ) as HTMLSpanElement;
-
-            // creo que no se puede remover props de styled components TODO fix
+            const $movieDetailCards = document.querySelectorAll(
+              ".withViewTransition"
+            ) as NodeListOf<HTMLImageElement>;
+            // creo que no se puede remover props de styled components solo inline styles
+            // aqui al dar click a dark mode se remueven los view-transition-name de los elementos que lo tengan para que no se produzcan animaciones (a excepcion el circulo de darkmode)
             $appHeader.style.removeProperty("view-transition-name");
             $avgProgressbar?.style.removeProperty("view-transition-name");
             $infoDate?.style.removeProperty("view-transition-name");
@@ -71,6 +74,9 @@ const AppHeader = () => {
               "--posterViewTransitionName",
               ""
             );
+            $movieDetailCards.forEach((card) => {
+              card.style.removeProperty("view-transition-name");
+            });
 
             const lastClick = e;
             const transition = makeViewTransition(() => {
@@ -105,11 +111,13 @@ const AppHeader = () => {
                   }
                 );
               });
+
               transition.finished.then(() => {
                 document.documentElement.classList.remove(
                   "rootCircleDarkModeViewTransition"
                 );
 
+                // seteo el view-transition-name de los elementos
                 $movieSerieDetailsPoster?.style.setProperty(
                   "--posterViewTransitionName",
                   "poster"
@@ -126,6 +134,15 @@ const AppHeader = () => {
                   "view-transition-name",
                   "show-avg-progress"
                 );
+                $movieDetailCards.forEach((card) => {
+                  const dataViewTransitionName =
+                    card.dataset.viewTransitionName!;
+
+                  card.style.setProperty(
+                    "view-transition-name",
+                    dataViewTransitionName
+                  );
+                });
               });
             }
           }}
