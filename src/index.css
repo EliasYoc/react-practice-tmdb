@@ -40,6 +40,7 @@
 .light {
   --main-bg-color: rgb(226, 226, 226);
   --box-bg-color: rgb(255, 255, 255);
+  --transparent-bg-color: #2929298f;
   --box-transparent-bg-color: #ffffff8f;
   --text-color: rgb(30, 30, 30);
   --secondary-text-color: #525252;
@@ -49,6 +50,7 @@
 .dark {
   --main-bg-color: rgb(30, 30, 30);
   --box-bg-color: rgb(53, 53, 53);
+  --transparent-bg-color: #2929298f;
   --box-transparent-bg-color: #2020208f;
   --text-color: rgb(226, 226, 226);
   --secondary-text-color: #b3b3b3;

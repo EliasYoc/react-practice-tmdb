@@ -10,6 +10,7 @@ import { TheShowImage } from "../../../../types";
 import { CustomGrid } from "../../../../globalStyledComponents";
 import { makeViewTransition } from "../../../../utils/helper";
 import { flushSync } from "react-dom";
+import { FiMinimize2, FiMaximize2 } from "react-icons/fi";
 
 const initialBatchOfImages = {
   logos: { count: 0, data: [] },
@@ -41,6 +42,7 @@ const MovieSerieMediaTabs = () => {
       posters: false,
       backdrops: false,
     });
+
   const cardsToTransitionCount = 5;
 
   useEffect(() => {
@@ -148,6 +150,18 @@ const MovieSerieMediaTabs = () => {
     return `${type}${item.file_path.split("/")[1].split(".")[0]}`;
   }
 
+  const getMenuOptions = (imapeType: string) => [
+    {
+      onClick: () => collapseImageList(imapeType),
+      optionLabel: isImgListCollapsed[imapeType] ? "Hide Cards" : "Show Cards",
+      optionIcon: isImgListCollapsed[imapeType] ? (
+        <FiMinimize2 />
+      ) : (
+        <FiMaximize2 />
+      ),
+    },
+  ];
+
   return (
     <TabsCustom
       tabPanelStyle={{ overflow: "hidden", padding: "1rem 0" }}
@@ -191,9 +205,7 @@ const MovieSerieMediaTabs = () => {
               style={{ width: "300px", overflow: "visible" }}
             />
           ),
-          onDoubleClick: () => {
-            collapseImageList("posters");
-          },
+          menuOptions: getMenuOptions("posters"),
         },
         imagesByType.logos.count > 0
           ? {
@@ -214,6 +226,7 @@ const MovieSerieMediaTabs = () => {
               onDoubleClick: () => {
                 collapseImageList("logos");
               },
+              menuOptions: getMenuOptions("logos"),
             }
           : null,
         {
@@ -228,6 +241,7 @@ const MovieSerieMediaTabs = () => {
           onDoubleClick: () => {
             collapseImageList("backdrops");
           },
+          menuOptions: getMenuOptions("backdrops"),
         },
       ]}
     />
