@@ -21,12 +21,11 @@ export const ViewFullHeight = styled.div`
 export const CustomGrid = styled.div<ICustomGrid>`
   display: grid;
   grid-template-columns: ${({ gridTemplateColumns }) =>
-    gridTemplateColumns || "repeat(auto-fit, minmax(200px, 1fr))"};
+    gridTemplateColumns || "repeat(auto-fit, minmax(250px, 1fr))"};
   gap: 0.5rem;
   padding: ${({ padding }) => padding || ".5rem"};
 
   @media only screen and ${mediaQueries.sm} {
-    grid-template-columns: ${({ gridTemplateColumns }) =>
-      gridTemplateColumns || "repeat(auto-fit, minmax(150px, 1fr))"};
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   }
 `;

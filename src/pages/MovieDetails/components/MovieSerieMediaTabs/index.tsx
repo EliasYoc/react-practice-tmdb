@@ -7,10 +7,10 @@ import { ConfigContext } from "../../../../context/ConfigurationContext";
 import "./styles.css";
 import { SwiperCard } from "./styles";
 import { TheShowImage } from "../../../../types";
-import { CustomGrid } from "../../../../globalStyledComponents";
 import { makeViewTransition } from "../../../../utils/helper";
 import { flushSync } from "react-dom";
 import { FiMinimize2, FiMaximize2 } from "react-icons/fi";
+import ImageGrid from "../../../../components/ImageGrid";
 
 const initialBatchOfImages = {
   logos: { count: 0, data: [] },
@@ -65,7 +65,6 @@ const MovieSerieMediaTabs = () => {
             data: data.backdrops,
           },
         });
-        console.log(data);
       } catch (error) {
         console.error(error);
       }
@@ -108,9 +107,19 @@ const MovieSerieMediaTabs = () => {
   const logosSliders = [
     ...imagesByType.logos.data
       .slice(0, cardsToTransitionCount)
-      .map((item) => (
+      .map((item, i) => (
         <img
-          style={{ width: "150px" }}
+          data-view-transition-name={getDynamicViewTransitionNameForImages(
+            item,
+            "logo"
+          )}
+          style={{
+            width: "150px",
+            viewTransitionName:
+              i < 1
+                ? getDynamicViewTransitionNameForImages(item, "logo")
+                : undefined,
+          }}
           src={`${images?.base_url}${images?.logo_sizes[2]}${item.file_path}`}
         />
       )),
@@ -123,9 +132,20 @@ const MovieSerieMediaTabs = () => {
   const backdropsSliders = [
     ...imagesByType.backdrops.data
       .slice(0, cardsToTransitionCount)
-      .map((item) => (
+      .map((item, i) => (
         <img
-          style={{ width: "100%", aspectRatio: "16/9" }}
+          data-view-transition-name={getDynamicViewTransitionNameForImages(
+            item,
+            "backdrop"
+          )}
+          style={{
+            width: "100%",
+            aspectRatio: "16/9",
+            viewTransitionName:
+              i < 1
+                ? getDynamicViewTransitionNameForImages(item, "backdrop")
+                : undefined,
+          }}
           src={`${images?.base_url}${images?.backdrop_sizes[2]}${item.file_path}`}
         />
       )),
@@ -162,67 +182,75 @@ const MovieSerieMediaTabs = () => {
     },
   ];
 
+  const postersTab = isImgListCollapsed["posters"] ? (
+    <ImageGrid
+      imageData={imagesByType.posters.data}
+      typeOfImage="poster"
+      cardsToTransitionCount={cardsToTransitionCount}
+    />
+  ) : (
+    <CustomSwiper
+      effect="cards"
+      pagination={{ clickable: true }}
+      sliders={posterSliders}
+      style={{ width: "300px", overflow: "visible" }}
+    />
+  );
+
+  const logosTab = isImgListCollapsed["logos"] ? (
+    <ImageGrid
+      imageData={imagesByType.logos.data}
+      typeOfImage="logo"
+      cardsToTransitionCount={1}
+      aspectRatio="16/9"
+    />
+  ) : (
+    <CustomSwiper
+      pagination={{ clickable: true }}
+      swiperSlideStyle={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "300px",
+      }}
+      cssMode
+      sliders={logosSliders}
+    />
+  );
+
+  const backdropsTab = isImgListCollapsed["backdrops"] ? (
+    <ImageGrid
+      imageData={imagesByType.backdrops.data}
+      typeOfImage="backdrop"
+      cardsToTransitionCount={1}
+      aspectRatio="16/9"
+      gridTemplateColumns="repeat(auto-fit, minmax(350px, 1fr))"
+    />
+  ) : (
+    <CustomSwiper
+      pagination={{ clickable: true }}
+      cssMode
+      sliders={backdropsSliders}
+    />
+  );
+
   return (
     <TabsCustom
       tabPanelStyle={{ overflow: "hidden", padding: "1rem 0" }}
       tabList={[
         {
           label: "Posters",
-          tabPanel: isImgListCollapsed["posters"] ? (
-            <CustomGrid>
-              {imagesByType.posters.data.map((item, i) => (
-                <img
-                  className={
-                    i < cardsToTransitionCount
-                      ? "withViewTransition"
-                      : undefined
-                  }
-                  data-view-transition-name={
-                    i < cardsToTransitionCount
-                      ? getDynamicViewTransitionNameForImages(item, "poster")
-                      : undefined
-                  }
-                  key={item.file_path}
-                  style={{
-                    width: "100%",
-                    aspectRatio: "2/3",
-                    borderRadius: "1rem",
-                    userSelect: "none",
-                    viewTransitionName:
-                      i < cardsToTransitionCount
-                        ? getDynamicViewTransitionNameForImages(item, "poster")
-                        : undefined,
-                  }}
-                  src={`${images?.base_url}${images?.profile_sizes[2]}${item.file_path}`}
-                />
-              ))}
-            </CustomGrid>
-          ) : (
-            <CustomSwiper
-              effect="cards"
-              pagination={{ clickable: true }}
-              sliders={posterSliders}
-              style={{ width: "300px", overflow: "visible" }}
-            />
-          ),
+          tabPanel: postersTab,
           menuOptions: getMenuOptions("posters"),
+          onDoubleClick: () => {
+            collapseImageList("posters");
+          },
         },
         imagesByType.logos.count > 0
           ? {
               label: "Logos",
-              tabPanel: (
-                <CustomSwiper
-                  pagination={{ clickable: true }}
-                  swiperSlideStyle={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    height: "300px",
-                  }}
-                  cssMode
-                  sliders={logosSliders}
-                />
-              ),
+              tabPanel: logosTab,
+
               onDoubleClick: () => {
                 collapseImageList("logos");
               },
@@ -231,13 +259,7 @@ const MovieSerieMediaTabs = () => {
           : null,
         {
           label: "Backdrops",
-          tabPanel: (
-            <CustomSwiper
-              pagination={{ clickable: true }}
-              cssMode
-              sliders={backdropsSliders}
-            />
-          ),
+          tabPanel: backdropsTab,
           onDoubleClick: () => {
             collapseImageList("backdrops");
           },
