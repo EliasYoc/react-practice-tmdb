@@ -7,10 +7,12 @@ import { ConfigContext } from "../../../../context/ConfigurationContext";
 import "./styles.css";
 import { SwiperCard } from "./styles";
 import { TheShowImage } from "../../../../types";
-import { makeViewTransition } from "../../../../utils/helper";
+import { makeViewTransition, mediaQueries } from "../../../../utils/helper";
 import { flushSync } from "react-dom";
 import { FiMinimize2, FiMaximize2 } from "react-icons/fi";
 import ImageGrid from "../../../../components/ImageGrid";
+import CustomModal from "../../../../components/CustomModal";
+import { useMediaQuery } from "../../../../hooks/useMediaQuery";
 
 const initialBatchOfImages = {
   logos: { count: 0, data: [] },
@@ -32,6 +34,8 @@ interface IImgListCollapsed {
 }
 const MovieSerieMediaTabs = () => {
   const { id, mediaType } = useParams();
+  const matchMdScreen = useMediaQuery(mediaQueries.md);
+
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
   const [imagesByType, setImagesByType] =
@@ -42,6 +46,13 @@ const MovieSerieMediaTabs = () => {
       posters: false,
       backdrops: false,
     });
+  const [itemForModal, setItemForModal] = useState<TheShowImage | null>(null);
+  const handleOpenModal = (item: TheShowImage) => {
+    setItemForModal(item);
+  };
+  const handleCloseModal = () => {
+    setItemForModal(null);
+  };
 
   const cardsToTransitionCount = 5;
 
@@ -187,6 +198,7 @@ const MovieSerieMediaTabs = () => {
       imageData={imagesByType.posters.data}
       typeOfImage="poster"
       cardsToTransitionCount={cardsToTransitionCount}
+      onClickImage={handleOpenModal}
     />
   ) : (
     <CustomSwiper
@@ -203,6 +215,7 @@ const MovieSerieMediaTabs = () => {
       typeOfImage="logo"
       cardsToTransitionCount={1}
       aspectRatio="16/9"
+      onClickImage={handleOpenModal}
     />
   ) : (
     <CustomSwiper
@@ -225,6 +238,7 @@ const MovieSerieMediaTabs = () => {
       cardsToTransitionCount={1}
       aspectRatio="16/9"
       gridTemplateColumns="repeat(auto-fit, minmax(350px, 1fr))"
+      onClickImage={handleOpenModal}
     />
   ) : (
     <CustomSwiper
@@ -234,39 +248,64 @@ const MovieSerieMediaTabs = () => {
     />
   );
 
+  const modalOpen = Boolean(itemForModal);
   return (
-    <TabsCustom
-      tabPanelStyle={{ overflow: "hidden", padding: "1rem 0" }}
-      tabList={[
-        {
-          label: "Posters",
-          tabPanel: postersTab,
-          menuOptions: getMenuOptions("posters"),
-          onDoubleClick: () => {
-            collapseImageList("posters");
+    <>
+      <TabsCustom
+        tabPanelStyle={{ overflow: "hidden", padding: "1rem 0" }}
+        tabList={[
+          {
+            label: "Posters",
+            tabPanel: postersTab,
+            menuOptions: getMenuOptions("posters"),
+            onDoubleClick: () => {
+              collapseImageList("posters");
+            },
           },
-        },
-        imagesByType.logos.count > 0
-          ? {
-              label: "Logos",
-              tabPanel: logosTab,
+          imagesByType.logos.count > 0
+            ? {
+                label: "Logos",
+                tabPanel: logosTab,
 
-              onDoubleClick: () => {
-                collapseImageList("logos");
-              },
-              menuOptions: getMenuOptions("logos"),
-            }
-          : null,
-        {
-          label: "Backdrops",
-          tabPanel: backdropsTab,
-          onDoubleClick: () => {
-            collapseImageList("backdrops");
+                onDoubleClick: () => {
+                  collapseImageList("logos");
+                },
+                menuOptions: getMenuOptions("logos"),
+              }
+            : null,
+          {
+            label: "Backdrops",
+            tabPanel: backdropsTab,
+            onDoubleClick: () => {
+              collapseImageList("backdrops");
+            },
+            menuOptions: getMenuOptions("backdrops"),
           },
-          menuOptions: getMenuOptions("backdrops"),
-        },
-      ]}
-    />
+        ]}
+      />
+      <CustomModal
+        fullWidth={false}
+        open={modalOpen}
+        onClose={handleCloseModal}
+        containerSx={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100vw",
+          visibility: "hidden",
+        }}
+      >
+        <img
+          style={{
+            width: matchMdScreen ? "100%" : "auto",
+            maxHeight: "100vh",
+            aspectRatio: itemForModal?.aspect_ratio,
+            objectFit: matchMdScreen ? "contain" : "fill",
+            visibility: "visible",
+          }}
+          src={`${images?.base_url}${images?.backdrop_sizes[2]}${itemForModal?.file_path}`}
+        />
+      </CustomModal>
+    </>
   );
 };
 
