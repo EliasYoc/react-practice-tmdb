@@ -34,7 +34,7 @@ interface IImgListCollapsed {
 }
 const MovieSerieMediaTabs = () => {
   const { id, mediaType } = useParams();
-  const matchMdScreen = useMediaQuery(mediaQueries.md);
+  const matchSmScreen = useMediaQuery(mediaQueries.sm);
 
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
@@ -88,6 +88,7 @@ const MovieSerieMediaTabs = () => {
       .slice(0, cardsToTransitionCount)
       .map((item) => (
         <img
+          onClick={() => handleOpenModal(item)}
           className="withViewTransition"
           data-view-transition-name={getDynamicViewTransitionNameForImages(
             item,
@@ -120,6 +121,7 @@ const MovieSerieMediaTabs = () => {
       .slice(0, cardsToTransitionCount)
       .map((item, i) => (
         <img
+          onClick={() => handleOpenModal(item)}
           data-view-transition-name={getDynamicViewTransitionNameForImages(
             item,
             "logo"
@@ -145,6 +147,7 @@ const MovieSerieMediaTabs = () => {
       .slice(0, cardsToTransitionCount)
       .map((item, i) => (
         <img
+          onClick={() => handleOpenModal(item)}
           data-view-transition-name={getDynamicViewTransitionNameForImages(
             item,
             "backdrop"
@@ -283,6 +286,7 @@ const MovieSerieMediaTabs = () => {
           },
         ]}
       />
+      {/* revisar si este custom modal lo puedo pasar dentro de ImageGrid */}
       <CustomModal
         fullWidth={false}
         open={modalOpen}
@@ -294,16 +298,25 @@ const MovieSerieMediaTabs = () => {
           visibility: "hidden",
         }}
       >
-        <img
+        <div
           style={{
-            width: matchMdScreen ? "100%" : "auto",
-            maxHeight: "100vh",
-            aspectRatio: itemForModal?.aspect_ratio,
-            objectFit: matchMdScreen ? "contain" : "fill",
+            display: "flex",
+            backgroundColor: "var(--box-bg-color)",
             visibility: "visible",
           }}
-          src={`${images?.base_url}${images?.backdrop_sizes[2]}${itemForModal?.file_path}`}
-        />
+        >
+          <img
+            style={{
+              width: matchSmScreen ? "100%" : "auto",
+              maxHeight: "100vh",
+              aspectRatio: itemForModal?.aspect_ratio,
+              objectFit: matchSmScreen ? "contain" : "fill",
+              visibility: "visible",
+              filter: "drop-shadow(0 0 0.15rem black)",
+            }}
+            src={`${images?.base_url}${images?.backdrop_sizes[1]}${itemForModal?.file_path}`}
+          />
+        </div>
       </CustomModal>
     </>
   );
