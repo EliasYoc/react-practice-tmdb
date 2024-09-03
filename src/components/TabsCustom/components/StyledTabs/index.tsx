@@ -27,4 +27,4 @@ export const StyledTabs = styled((props: StyledTabsProps) => (
     backgroundColor: "#55b9b2",
     borderRadius: "calc(infinity * 1px)",
   },
-});
+}) as typeof Tabs;

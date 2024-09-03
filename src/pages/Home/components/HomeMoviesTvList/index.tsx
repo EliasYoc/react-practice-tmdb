@@ -8,9 +8,7 @@ interface IHomeProps {
 }
 const HomeMoviesTvList = ({ movieTvList }: IHomeProps) => {
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
-  const { images } =
-    tmdbConfigurationDetails || {};
-
+  const { images } = tmdbConfigurationDetails || {};
 
   return (
     <HomeMovies>

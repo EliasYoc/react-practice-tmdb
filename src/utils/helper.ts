@@ -12,11 +12,14 @@ export const formatDate = (
   locales: string | string[],
   options?: Intl.DateTimeFormatOptions,
   date?: number | Date
-) =>
-  Intl.DateTimeFormat(locales, {
+) => {
+  const formattedDate = Intl.DateTimeFormat(locales, {
     timeZone: "UTC",
     ...options,
   }).format(date);
+
+  return formattedDate;
+};
 
 export const getAverageColor = (average: number) => {
   if (average >= 8) return "#0ece2e";

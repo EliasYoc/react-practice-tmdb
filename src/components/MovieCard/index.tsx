@@ -22,7 +22,7 @@ interface MovieCardProps {
   average: number;
   title?: string;
   id: number;
-  releaseDate?: string;
+  releaseDate?: string | null;
   description: string;
   mediaType: "movie" | "tv";
 }
@@ -33,7 +33,7 @@ const MovieCard = ({
   average,
   title,
   id,
-  releaseDate = "00-00-0000",
+  releaseDate = null,
   description,
   mediaType,
 }: MovieCardProps) => {
@@ -42,11 +42,13 @@ const MovieCard = ({
   const [isOverviewOpen, setIsOverviewOpen] = useState(false);
   const isTransitioning = unstable_useViewTransitionState(to);
 
-  const formattedDate = formatDate(
-    navigator.language,
-    { year: "numeric", month: "short", day: "numeric" },
-    new Date(releaseDate)
-  );
+  const formattedDate = releaseDate
+    ? formatDate(
+        navigator.language,
+        { year: "numeric", month: "short", day: "numeric" },
+        new Date(releaseDate)
+      )
+    : "empty";
 
   return (
     <Card
@@ -98,7 +100,7 @@ const MovieCard = ({
             />
           </CircularProgressbarWrapper>
           <CardDate
-            dateTime={releaseDate}
+            dateTime={releaseDate || ""}
             style={{
               viewTransitionName: isTransitioning
                 ? "movie-series-release-date"

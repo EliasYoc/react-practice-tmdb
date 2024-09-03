@@ -4,6 +4,8 @@ export const CastTabContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+  max-width: 120ch;
+  margin: 0 auto;
 `;
 
 export const Departments = styled.div`
