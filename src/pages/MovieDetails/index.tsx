@@ -1,6 +1,5 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import { getShowById } from "../../services/tmdb/tmdbMovies";
 import PageCover from "../../components/PageCover";
 import { ConfigContext } from "../../context/ConfigurationContext";
 import { MainSection } from "./style";
@@ -9,6 +8,7 @@ import MovieSerieCardInfo from "../../components/PageCover/components/MovieSerie
 import { useMediaQuery } from "../../hooks/useMediaQuery";
 import { IMovieSerieDetail } from "../../types";
 import MovieSerieMediaTabs from "./components/MovieSerieMediaTabs";
+import useShowsDetails from "../../hooks/react-query/useShowsDetails";
 
 interface ReusableMovieShowDetails {
   title?: string;
@@ -24,23 +24,18 @@ const MovieDetails = () => {
   const matchMdScreen = useMediaQuery(mediaQueries.md);
 
   const { images } = tmdbConfigurationDetails || {};
-  const [movieDetails, setMovieDetails] = useState<IMovieSerieDetail | null>(
-    null
-  );
   const formatedReleaseDateRef = useRef<string>();
-  useEffect(() => {
-    // aprender a usar useEffect de la nueva version de react
-    const getMovie = async () => {
-      try {
-        const res = await getShowById({ id, mediaType });
-        setMovieDetails(res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getMovie();
-    return () => {};
-  }, [id, mediaType]);
+  const {
+    data: movieDetails,
+    isPending,
+    isError,
+    error,
+  } = useShowsDetails<IMovieSerieDetail>({ id, mediaType });
+
+  if (isPending) return <div>Loading...</div>;
+  if (isError) {
+    return <div>{error.message}</div>;
+  }
 
   if (movieDetails) {
     formatedReleaseDateRef.current = formatDate(

@@ -1,14 +1,15 @@
 import { LoaderFunction, LoaderFunctionArgs } from "react-router-dom";
 import { getShowById } from "../../services/tmdb/tmdbMovies";
-
+// No longer used
 interface IPathTvMovie {
   [key: string]: string;
   // movie: string;
   // tv: string;
 }
 
-
-export const CastLoader: LoaderFunction = async ({ params }: LoaderFunctionArgs) => {
+export const CastLoader: LoaderFunction = async ({
+  params,
+}: LoaderFunctionArgs) => {
   const { id, mediaType = "movie" } = params;
   const pathForTvOrMovie: IPathTvMovie = {
     movie: "/credits",

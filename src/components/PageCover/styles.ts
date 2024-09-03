@@ -30,7 +30,8 @@ export const ImgBackdrop = styled.div`
 `;
 
 export const CoverDetails = styled.section`
-  width: min(1200px, 100%);
+  // width: min(1200px, 100%);
+  max-width: 120ch;
   display: flex;
   gap: 1rem;
   padding: 1rem;
