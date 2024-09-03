@@ -8,6 +8,13 @@ interface TheShowImage {
   width: number;
 }
 
+interface TMDBTheShowsImages {
+  logos: TheShowImage[];
+  posters: TheShowImage[];
+  backdrops: TheShowImage[];
+  id: number;
+}
+
 export interface ITmdbPerson {
   adult: boolean;
   gender: number;

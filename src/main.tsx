@@ -14,7 +14,7 @@ import ErrorPage from "./error-page.tsx";
 import { ConfigurationProvider } from "./context/ConfigurationContext.tsx";
 import MovieDetails from "./pages/MovieDetails/index.tsx";
 import Cast from "./pages/Cast/index.tsx";
-import { CastLoader } from "./routes/pages/castLoader.ts";
+// import { CastLoader } from "./routes/pages/castLoader.ts";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -28,12 +28,12 @@ const routes = createBrowserRouter(
       <Route path="/:mediaType/:id" element={<MovieDetails />}></Route>
       <Route
         path="/:mediaType/:id/cast"
-        loader={CastLoader}
+        // loader={CastLoader}
         element={<Cast />}
       />
       <Route
         path="/:mediaType/:id/cast/:department"
-        loader={CastLoader}
+        // loader={CastLoader}
         element={<Cast />}
       />
     </Route>

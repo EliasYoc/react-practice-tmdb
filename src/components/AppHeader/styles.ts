@@ -9,7 +9,7 @@ export const Header = styled.header`
   width: 100%;
   top: 0;
   background: var(--box-transparent-bg-color);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(35px);
   color: var(--text-color);
   justify-content: space-between;
   z-index: 3;

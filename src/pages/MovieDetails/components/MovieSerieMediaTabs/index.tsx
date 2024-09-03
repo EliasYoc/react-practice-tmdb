@@ -1,24 +1,25 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import TabsCustom from "../../../../components/TabsCustom";
-import { getShowById } from "../../../../services/tmdb/tmdbMovies";
 import { useParams } from "react-router-dom";
 import CustomSwiper from "../../../../components/CustomSwiper";
 import { ConfigContext } from "../../../../context/ConfigurationContext";
 import "./styles.css";
 import { SwiperCard } from "./styles";
-import { TheShowImage } from "../../../../types";
+import { TheShowImage, TMDBTheShowsImages } from "../../../../types";
 import { makeViewTransition, mediaQueries } from "../../../../utils/helper";
 import { flushSync } from "react-dom";
 import { FiMinimize2, FiMaximize2 } from "react-icons/fi";
 import ImageGrid from "../../../../components/ImageGrid";
 import CustomModal from "../../../../components/CustomModal";
 import { useMediaQuery } from "../../../../hooks/useMediaQuery";
+import useShowsDetails from "../../../../hooks/react-query/useShowsDetails";
 
-const initialBatchOfImages = {
-  logos: { count: 0, data: [] },
-  posters: { count: 0, data: [] },
-  backdrops: { count: 0, data: [] },
-};
+// const initialBatchOfImages = {
+//   logos: { count: 0, data: [] },
+//   posters: { count: 0, data: [] },
+//   backdrops: { count: 0, data: [] },
+// };
+
 interface IImagesByType {
   logos: IImageResult;
   posters: IImageResult;
@@ -33,13 +34,14 @@ interface IImgListCollapsed {
   [key: string]: boolean;
 }
 const MovieSerieMediaTabs = () => {
+  //TODO: USE REACT QUERY
+  //TODO: USE VIRTUALIZER
+  //TODO: APPLY 130CH HEIGHT
   const { id, mediaType } = useParams();
   const matchSmScreen = useMediaQuery(mediaQueries.sm);
 
   const { tmdbConfigurationDetails } = useContext(ConfigContext);
   const images = tmdbConfigurationDetails?.images;
-  const [imagesByType, setImagesByType] =
-    useState<IImagesByType>(initialBatchOfImages);
   const [isImgListCollapsed, setIsImgListCollapsed] =
     useState<IImgListCollapsed>({
       logos: false,
@@ -47,6 +49,28 @@ const MovieSerieMediaTabs = () => {
       backdrops: false,
     });
   const [itemForModal, setItemForModal] = useState<TheShowImage | null>(null);
+  const { data, isPending, isError, error } =
+    useShowsDetails<TMDBTheShowsImages>({
+      id,
+      mediaType,
+      pathRest: "/images",
+    });
+  if (isPending) return <div>Loading...</div>;
+  if (isError) {
+    return <div>{error.message}</div>;
+  }
+
+  const imagesByType: IImagesByType = {
+    logos: { count: data.logos.length, data: data.logos },
+    posters: {
+      count: data.posters.length,
+      data: data.posters,
+    },
+    backdrops: {
+      count: data.backdrops.length,
+      data: data.backdrops,
+    },
+  };
   const handleOpenModal = (item: TheShowImage) => {
     setItemForModal(item);
   };
@@ -55,33 +79,6 @@ const MovieSerieMediaTabs = () => {
   };
 
   const cardsToTransitionCount = 5;
-
-  useEffect(() => {
-    const getMedia = async () => {
-      try {
-        const { data } = await getShowById({
-          id,
-          mediaType,
-          pathRest: "/images",
-        });
-
-        setImagesByType({
-          logos: { count: data.logos.length, data: data.logos },
-          posters: {
-            count: data.posters.length,
-            data: data.posters,
-          },
-          backdrops: {
-            count: data.backdrops.length,
-            data: data.backdrops,
-          },
-        });
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getMedia();
-  }, [id, mediaType]);
 
   const posterSliders = [
     ...imagesByType.posters.data
@@ -255,7 +252,12 @@ const MovieSerieMediaTabs = () => {
   return (
     <>
       <TabsCustom
-        tabPanelStyle={{ overflow: "hidden", padding: "1rem 0" }}
+        tabPanelStyle={{
+          overflow: "hidden",
+          padding: "1rem 0",
+          maxWidth: "120ch",
+          margin: "0 auto",
+        }}
         tabList={[
           {
             label: "Posters",
