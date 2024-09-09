@@ -20,13 +20,14 @@ export const CoverImg = styled.img`
 export const ImgBackdrop = styled.div`
   position: absolute;
   inset: 0;
-  backdrop-filter: blur(1.2rem);
-  background: linear-gradient(
-    0deg,
-    hsl(0deg 0% 0%) 0%,
-    hsl(0deg 0% 69% / 0%) 55%,
-    hsl(0deg 0% 98% / 0%) 100%
-  );
+  backdrop-filter: blur(1rem);
+  background: #000000a8;
+  // background: linear-gradient(
+  //   0deg,
+  //   hsl(0deg 0% 0%) 0%,
+  //   hsl(0deg 0% 69% / 0%) 55%,
+  //   hsl(0deg 0% 98% / 0%) 100%
+  // );
 `;
 
 export const CoverDetails = styled.section`
@@ -41,6 +42,8 @@ export const CoverDetails = styled.section`
 
   @media only screen and (${mediaQueries.md}) {
     & {
+      margin: 0;
+      width: 100%;
       justify-content: center;
       align-items: flex-start;
     }
@@ -55,17 +58,38 @@ export const PosterWrapper = styled.div`
 
   @media only screen and (${mediaQueries.md}) {
     & {
-      width: 75%;
+      // width: 75%;
+      width: min(350px, 85%);
     }
   }
 `;
 
-export const Poster = styled.img`
+export const Poster = styled.div`
   width: 100%;
   height: 100%;
   border-radius: 1rem;
   view-transition-name: var(--posterViewTransitionName);
+  position: relative;
 
+  &::before {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    background: inherit;
+    filter: blur(40px) saturate(400%);
+  }
+
+  &::after {
+    content: "";
+    border-radius: inherit;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    background: inherit;
+  }
   @media only screen and (${mediaQueries.md}) {
     transform: translateY(var(--mob-responsive-poster-top));
   }
