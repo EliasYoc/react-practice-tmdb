@@ -37,6 +37,8 @@ const PageCover = ({
   const posterInlineStyle: CustomStyle = {
     "--posterViewTransitionName": "poster",
     contain: "layout",
+    backgroundImage: `url(${srcPoster})`,
+    backgroundSize: "cover",
   };
   // I use the state from /MovieCard component to load the average and date faster in order to have a better view transition, because I need the movie date and release date etc to be placed (from /MovieCard to /PageCover) in the element that is transitioning )
 
@@ -49,8 +51,8 @@ const PageCover = ({
           <PosterWrapper>
             <Poster
               className="detailsOfShowPoster"
-              src={srcPoster}
-              alt={title}
+              // src={srcPoster}
+              // alt={title}
               style={posterInlineStyle}
             />
           </PosterWrapper>
