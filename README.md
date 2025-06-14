@@ -6,7 +6,7 @@ You havo got to use TMDB.
 
 - go to settings and click [API](https://www.themoviedb.org/settings/api) so that you can copy the API Read Acces Token
 
-## nvm variables with vite
+## env with vite
 
 on the project go to .env.local file. If you don't have you can create a new one in the root directory
 
